@@ -8,3 +8,6 @@
 *.iws
 *.iml
 *.ipr%
+
+### OS X ###
+.DS_Store
