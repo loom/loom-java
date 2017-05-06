@@ -8,9 +8,9 @@ import java.util.UUID;
  * Created by mhyeon.lee on 2017. 5. 3..
  */
 public interface DomainEvent extends Serializable {
-    UUID getAggregateId();
+  UUID getAggregateId();
 
-    long getVersion();
+  long getVersion();
 
-    ZonedDateTime getEventTime();
+  ZonedDateTime getEventTime();
 }
