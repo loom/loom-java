@@ -19,7 +19,7 @@ public class IssueRepository implements Repository<Issue> {
 
     @Override
     public void save(Issue issue) {
-        eventStore.saveEvents(issue.getId(), issue.pollEvents());
+        eventStore.saveEvents(issue.getId(), issue.pollAllPendingEvents());
     }
 
     @Override
