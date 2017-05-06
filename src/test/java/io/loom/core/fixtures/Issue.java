@@ -90,7 +90,7 @@ public class Issue implements AggregateRoot {
     }
 
     @Override
-    public Iterable<DomainEvent> pollEvents() {
+    public Iterable<DomainEvent> pollAllPendingEvents() {
         List<IssueEvent> events = new ArrayList<>(this.events);
         this.events.clear();
         return Collections.unmodifiableList(events);

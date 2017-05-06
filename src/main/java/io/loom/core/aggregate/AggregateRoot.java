@@ -13,5 +13,5 @@ public interface AggregateRoot extends Serializable {
 
     long getVersion();
 
-    Iterable<DomainEvent> pollEvents();
+    Iterable<DomainEvent> pollAllPendingEvents();
 }
