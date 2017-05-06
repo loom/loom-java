@@ -7,7 +7,7 @@ import java.util.UUID;
  * Created by mhyeon.lee on 2017. 5. 3..
  */
 public interface Repository<AggregateT extends AggregateRoot> {
-  void save(AggregateT root);
+    void save(AggregateT root);
 
-  Optional<AggregateT> load(UUID id);
+    Optional<AggregateT> load(UUID id);
 }

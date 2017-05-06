@@ -8,9 +8,9 @@ import java.util.UUID;
  * Created by mhyeon.lee on 2017. 5. 3..
  */
 public interface AggregateRoot extends Serializable {
-  UUID getId();
+    UUID getId();
 
-  long getVersion();
+    long getVersion();
 
-  Iterable<DomainEvent> pollEvents();
+    Iterable<DomainEvent> pollEvents();
 }

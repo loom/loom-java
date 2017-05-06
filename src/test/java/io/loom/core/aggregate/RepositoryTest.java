@@ -18,41 +18,41 @@ import org.junit.Test;
  * Created by mhyeon.lee on 2017. 5. 3..
  */
 public class RepositoryTest {
-  @Test
-  public void saveTest() {
-    // Given
-    EventStore eventStore = new InMemoryEventStore();
-    Repository<Issue> repository = new IssueRepository(eventStore);
-    Issue issue = new Issue(UUID.randomUUID(), "issue-title", "issue-content");
-    issue.changeTitle("changed-title");
+    @Test
+    public void saveTest() {
+        // Given
+        EventStore eventStore = new InMemoryEventStore();
+        Repository<Issue> repository = new IssueRepository(eventStore);
+        Issue issue = new Issue(UUID.randomUUID(), "issue-title", "issue-content");
+        issue.changeTitle("changed-title");
 
-    // When
-    repository.save(issue);
+        // When
+        repository.save(issue);
 
-    // Then
-    Iterator<DomainEvent> storedEvents = eventStore.getEvents(issue.getId()).iterator();
-    assertEquals(storedEvents.next().getVersion(), 0);
-    assertEquals(storedEvents.next().getVersion(), 1);
-    assertFalse(storedEvents.hasNext());
-  }
+        // Then
+        Iterator<DomainEvent> storedEvents = eventStore.getEvents(issue.getId()).iterator();
+        assertEquals(storedEvents.next().getVersion(), 0);
+        assertEquals(storedEvents.next().getVersion(), 1);
+        assertFalse(storedEvents.hasNext());
+    }
 
-  @Test
-  public void loadTest() {
-    // Given
-    EventStore eventStore = new InMemoryEventStore();
-    Repository<Issue> repository = new IssueRepository(eventStore);
-    Issue issue = new Issue(UUID.randomUUID(), "issue-title", "issue-content");
-    issue.changeTitle("changed-title");
-    issue.changeContent("changed-content");
-    repository.save(issue);
+    @Test
+    public void loadTest() {
+        // Given
+        EventStore eventStore = new InMemoryEventStore();
+        Repository<Issue> repository = new IssueRepository(eventStore);
+        Issue issue = new Issue(UUID.randomUUID(), "issue-title", "issue-content");
+        issue.changeTitle("changed-title");
+        issue.changeContent("changed-content");
+        repository.save(issue);
 
-    // When
-    Optional<Issue> loadIssue = repository.load(issue.getId());
+        // When
+        Optional<Issue> loadIssue = repository.load(issue.getId());
 
-    // Then
-    assertTrue(loadIssue.isPresent());
-    assertEquals(loadIssue.get(), issue);
-    assertEquals(loadIssue.get().getTitle(), issue.getTitle());
-    assertEquals(loadIssue.get().getContent(), issue.getContent());
-  }
+        // Then
+        assertTrue(loadIssue.isPresent());
+        assertEquals(loadIssue.get(), issue);
+        assertEquals(loadIssue.get().getTitle(), issue.getTitle());
+        assertEquals(loadIssue.get().getContent(), issue.getContent());
+    }
 }

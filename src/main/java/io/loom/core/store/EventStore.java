@@ -7,7 +7,7 @@ import java.util.UUID;
  * Created by mhyeon.lee on 2017. 5. 3..
  */
 public interface EventStore {
-  void saveEvents(UUID id, Iterable<DomainEvent> events);
+    void saveEvents(UUID id, Iterable<DomainEvent> events);
 
-  Iterable<DomainEvent> getEvents(UUID id);
+    Iterable<DomainEvent> getEvents(UUID id);
 }

@@ -10,25 +10,25 @@ import java.util.UUID;
  * Created by mhyeon.lee on 2017. 5. 3..
  */
 public class IssueRepository implements Repository<Issue> {
-  private final EventStore eventStore;
+    private final EventStore eventStore;
 
-  public IssueRepository(EventStore eventStore) {
-    this.eventStore = eventStore;
-  }
-
-  @Override
-  public void save(Issue issue) {
-    eventStore.saveEvents(issue.getId(), issue.pollEvents());
-  }
-
-  @Override
-  public Optional<Issue> load(UUID id) {
-    Iterable<DomainEvent> events = eventStore.getEvents(id);
-    if (!events.iterator().hasNext()) {
-      return Optional.empty();
+    public IssueRepository(EventStore eventStore) {
+        this.eventStore = eventStore;
     }
-    Issue issue = new Issue();
-    events.forEach(issue::apply);
-    return Optional.of(issue);
-  }
+
+    @Override
+    public void save(Issue issue) {
+        eventStore.saveEvents(issue.getId(), issue.pollEvents());
+    }
+
+    @Override
+    public Optional<Issue> load(UUID id) {
+        Iterable<DomainEvent> events = eventStore.getEvents(id);
+        if (!events.iterator().hasNext()) {
+            return Optional.empty();
+        }
+        Issue issue = new Issue();
+        events.forEach(issue::apply);
+        return Optional.of(issue);
+    }
 }
