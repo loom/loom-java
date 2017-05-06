@@ -36,7 +36,7 @@ public interface IssueEvent extends DomainEvent {
         }
 
         @Override
-        public ZonedDateTime getEventTime() {
+        public ZonedDateTime getOccurrenceTime() {
             return eventTime;
         }
 
@@ -73,7 +73,7 @@ public interface IssueEvent extends DomainEvent {
         }
 
         @Override
-        public ZonedDateTime getEventTime() {
+        public ZonedDateTime getOccurrenceTime() {
             return eventTime;
         }
 
@@ -106,7 +106,7 @@ public interface IssueEvent extends DomainEvent {
         }
 
         @Override
-        public ZonedDateTime getEventTime() {
+        public ZonedDateTime getOccurrenceTime() {
             return eventTime;
         }
 
