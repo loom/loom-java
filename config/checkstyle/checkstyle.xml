@@ -15,6 +15,19 @@
     Authors: Max Vetrenko, Ruslan Diachenko, Roman Ivanov.
  -->
 
+<!--
+    원본은 아래 checkstyle-7.7의 google_checks.xml 입니다
+    https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-7.7/src/main/resources/google_checks.xml
+
+    변경이력
+
+    - basicOffset 2 -> 4
+      caseIndent 2 -> 4
+      throwsIndent 4 -> 8
+      lineWrappingIndentation 4 -> 8
+      arrayInitIndent 2 -> 4
+-->
+
 <module name = "Checker">
     <property name="charset" value="UTF-8"/>
 
