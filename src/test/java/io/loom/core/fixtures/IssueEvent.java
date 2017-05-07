@@ -1,7 +1,6 @@
 package io.loom.core.fixtures;
 
 import io.loom.core.event.DomainEvent;
-
 import java.time.ZonedDateTime;
 import java.util.UUID;
 

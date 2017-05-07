@@ -1,17 +1,18 @@
 package io.loom.core.aggregate;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import io.loom.core.event.DomainEvent;
 import io.loom.core.fixtures.InMemoryEventStore;
 import io.loom.core.fixtures.Issue;
 import io.loom.core.fixtures.IssueRepository;
 import io.loom.core.store.EventStore;
-import org.junit.Test;
-
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.UUID;
-
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * Created by mhyeon.lee on 2017. 5. 3..

@@ -1,7 +1,6 @@
 package io.loom.core.store;
 
 import io.loom.core.event.DomainEvent;
-
 import java.util.UUID;
 
 /**

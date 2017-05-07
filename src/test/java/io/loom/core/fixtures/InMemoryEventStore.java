@@ -2,8 +2,11 @@ package io.loom.core.fixtures;
 
 import io.loom.core.event.DomainEvent;
 import io.loom.core.store.EventStore;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**

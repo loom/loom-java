@@ -3,7 +3,6 @@ package io.loom.core.fixtures;
 import io.loom.core.aggregate.Repository;
 import io.loom.core.event.DomainEvent;
 import io.loom.core.store.EventStore;
-
 import java.util.Optional;
 import java.util.UUID;
 

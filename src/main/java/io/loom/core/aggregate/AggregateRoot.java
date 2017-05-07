@@ -1,7 +1,6 @@
 package io.loom.core.aggregate;
 
 import io.loom.core.event.DomainEvent;
-
 import java.io.Serializable;
 import java.util.UUID;
 

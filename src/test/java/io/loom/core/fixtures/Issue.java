@@ -5,7 +5,6 @@ import io.loom.core.event.DomainEvent;
 import io.loom.core.fixtures.IssueEvent.IssueContentChanged;
 import io.loom.core.fixtures.IssueEvent.IssueCreated;
 import io.loom.core.fixtures.IssueEvent.IssueTitleChanged;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +15,6 @@ import java.util.UUID;
  */
 public class Issue implements AggregateRoot {
     private final List<IssueEvent> events = new ArrayList<>();
-
     private UUID id;
     private long version;
     private String title;
@@ -60,6 +58,10 @@ public class Issue implements AggregateRoot {
         events.add(event);
     }
 
+    /**
+     * 이 메소드만 특이하게 javadoc을 작성해야한다는 checkstyle 경고가 있습니다.
+     * 이유를 모르겠습니다
+     * */
     public void apply(DomainEvent event) {
         if (event instanceof IssueCreated) {
             applyIssueCreated(IssueCreated.class.cast(event));
