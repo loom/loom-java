@@ -19,6 +19,6 @@ public class AggregateRootTest {
         issue.changeTitle("changed-title");
 
         // Then
-        assertEquals(1, issue.getVersion());
+        assertEquals(2, issue.getVersion());
     }
 }

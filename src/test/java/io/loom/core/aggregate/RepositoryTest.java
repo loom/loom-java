@@ -31,8 +31,8 @@ public class RepositoryTest {
 
         // Then
         Iterator<DomainEvent> storedEvents = eventStore.getEvents(issue.getId()).iterator();
-        assertEquals(0, storedEvents.next().getVersion());
         assertEquals(1, storedEvents.next().getVersion());
+        assertEquals(2, storedEvents.next().getVersion());
         assertFalse(storedEvents.hasNext());
     }
 
