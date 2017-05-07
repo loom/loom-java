@@ -31,8 +31,8 @@ public class RepositoryTest {
 
         // Then
         Iterator<DomainEvent> storedEvents = eventStore.getEvents(issue.getId()).iterator();
-        assertEquals(storedEvents.next().getVersion(), 0);
-        assertEquals(storedEvents.next().getVersion(), 1);
+        assertEquals(0, storedEvents.next().getVersion());
+        assertEquals(1, storedEvents.next().getVersion());
         assertFalse(storedEvents.hasNext());
     }
 
@@ -51,8 +51,8 @@ public class RepositoryTest {
 
         // Then
         assertTrue(loadIssue.isPresent());
-        assertEquals(loadIssue.get(), issue);
-        assertEquals(loadIssue.get().getTitle(), issue.getTitle());
-        assertEquals(loadIssue.get().getContent(), issue.getContent());
+        assertEquals(issue, loadIssue.get());
+        assertEquals(issue.getTitle(), loadIssue.get().getTitle());
+        assertEquals(issue.getContent(), loadIssue.get().getContent());
     }
 }
