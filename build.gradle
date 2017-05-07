@@ -17,3 +17,21 @@ dependencies {
 checkstyle {
     toolVersion = '7.7'
 }
+
+/**
+ * ignoreFailures = false 설정만으로 checkstyle 위배 시 빌드가 실패해야 하지만
+ * 다음과 같은 버그가 있습니다.
+ * https://github.com/gradle/gradle/issues/881
+ *
+ * 이 구성은 버그가 해결될 때 까지 사용되는 임시방편입니다.
+ * */
+tasks.withType(Checkstyle).each { checkstyleTask ->
+    checkstyleTask.doLast {
+        reports.all { report ->
+            def outputFile = report.destination
+            if (outputFile.exists() && outputFile.text.contains("<error ")) {
+                throw new GradleException("There were checkstyle warnings! For more info check $outputFile")
+            }
+        }
+    }
+}
