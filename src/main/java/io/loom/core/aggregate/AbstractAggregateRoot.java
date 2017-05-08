@@ -17,7 +17,7 @@ public abstract class AbstractAggregateRoot implements AggregateRoot {
 
     @Override
     public final UUID getId() {
-        return id;
+        return this.id;
     }
 
     @Override
