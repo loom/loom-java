@@ -2,9 +2,8 @@ package io.loom.core.fixtures;
 
 import io.loom.core.aggregate.AggregateRoot;
 import io.loom.core.event.DomainEvent;
-import io.loom.core.fixtures.IssueEvent.IssueContentChanged;
-import io.loom.core.fixtures.IssueEvent.IssueCreated;
-import io.loom.core.fixtures.IssueEvent.IssueTitleChanged;
+
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.UUID;
  * Created by mhyeon.lee on 2017. 5. 3..
  */
 public class Issue implements AggregateRoot {
-    private final List<IssueEvent> events = new ArrayList<>();
+    private final List<DomainEvent> events = new ArrayList<>();
     private UUID id;
     private long version;
     private String title;
@@ -53,7 +52,7 @@ public class Issue implements AggregateRoot {
         return content;
     }
 
-    private void raise(IssueEvent event) {
+    private void raise(DomainEvent event) {
         apply(event);
         events.add(event);
     }
@@ -93,7 +92,7 @@ public class Issue implements AggregateRoot {
 
     @Override
     public Iterable<DomainEvent> pollAllPendingEvents() {
-        List<IssueEvent> events = new ArrayList<>(this.events);
+        List<DomainEvent> events = new ArrayList<>(this.events);
         this.events.clear();
         return Collections.unmodifiableList(events);
     }
@@ -120,5 +119,110 @@ public class Issue implements AggregateRoot {
         int result = id.hashCode();
         result = 31 * result + (int) (version ^ (version >>> 32));
         return result;
+    }
+
+    public static class IssueCreated implements DomainEvent {
+        private final UUID id;
+        private final long version;
+        private final ZonedDateTime eventTime;
+        private final String title;
+        private final String content;
+
+        public IssueCreated(UUID id, long version, String title, String content) {
+            this.id = id;
+            this.version = version;
+            this.eventTime = ZonedDateTime.now();
+            this.title = title;
+            this.content = content;
+        }
+
+        @Override
+        public UUID getAggregateId() {
+            return id;
+        }
+
+        @Override
+        public long getVersion() {
+            return version;
+        }
+
+        @Override
+        public ZonedDateTime getOccurrenceTime() {
+            return eventTime;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getContent() {
+            return content;
+        }
+    }
+
+    public static class IssueTitleChanged implements DomainEvent {
+        private final UUID id;
+        private final long version;
+        private final ZonedDateTime eventTime;
+        private final String title;
+
+        public IssueTitleChanged(UUID id, long version, String title) {
+            this.id = id;
+            this.version = version;
+            this.eventTime = ZonedDateTime.now();
+            this.title = title;
+        }
+
+        @Override
+        public UUID getAggregateId() {
+            return id;
+        }
+
+        @Override
+        public long getVersion() {
+            return version;
+        }
+
+        @Override
+        public ZonedDateTime getOccurrenceTime() {
+            return eventTime;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+    }
+
+    public static class IssueContentChanged implements DomainEvent {
+        private final UUID id;
+        private final long version;
+        private final ZonedDateTime eventTime;
+        private final String content;
+
+        public IssueContentChanged(UUID id, long version, String content) {
+            this.id = id;
+            this.version = version;
+            this.eventTime = ZonedDateTime.now();
+            this.content = content;
+        }
+
+        @Override
+        public UUID getAggregateId() {
+            return id;
+        }
+
+        @Override
+        public long getVersion() {
+            return version;
+        }
+
+        @Override
+        public ZonedDateTime getOccurrenceTime() {
+            return eventTime;
+        }
+
+        public String getContent() {
+            return content;
+        }
     }
 }
