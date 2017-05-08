@@ -2,7 +2,6 @@ package io.loom.core.fixtures;
 
 import io.loom.core.aggregate.AggregateRoot;
 import io.loom.core.event.DomainEvent;
-import io.loom.core.event.EventElement;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ import java.util.UUID;
  * Created by mhyeon.lee on 2017. 5. 3..
  */
 public class Issue implements AggregateRoot {
-    private final List<DomainEvent> events = new ArrayList<>();
+    private final List<DomainEvent<Issue>> events = new ArrayList<>();
     private UUID id;
     private long version;
     private String title;
@@ -53,17 +52,13 @@ public class Issue implements AggregateRoot {
         return content;
     }
 
-    private void raise(DomainEvent event) {
+    private void raise(DomainEvent<Issue> event) {
         apply(event);
         events.add(event);
     }
 
-    public void apply(DomainEvent event) {
-        if (event instanceof EventElement<?>) {
-            ((EventElement<Issue>)event).applyTo(this);
-        } else {
-            throw new IllegalArgumentException(event.getClass() + " is not supported.");
-        }
+    public void apply(DomainEvent<Issue> event) {
+        event.applyTo(this);
     }
 
     private void applyIssueCreated(IssueCreated event) {
@@ -84,8 +79,8 @@ public class Issue implements AggregateRoot {
     }
 
     @Override
-    public Iterable<DomainEvent> pollAllPendingEvents() {
-        List<DomainEvent> events = new ArrayList<>(this.events);
+    public Iterable<DomainEvent<AggregateRoot>> pollAllPendingEvents() {
+        List events = new ArrayList<>(this.events);
         this.events.clear();
         return Collections.unmodifiableList(events);
     }
@@ -114,7 +109,7 @@ public class Issue implements AggregateRoot {
         return result;
     }
 
-    public static class IssueCreated implements DomainEvent, EventElement<Issue> {
+    public static class IssueCreated implements DomainEvent<Issue> {
         private final UUID id;
         private final long version;
         private final ZonedDateTime eventTime;
@@ -159,7 +154,7 @@ public class Issue implements AggregateRoot {
         }
     }
 
-    public static class IssueTitleChanged implements DomainEvent, EventElement<Issue> {
+    public static class IssueTitleChanged implements DomainEvent<Issue> {
         private final UUID id;
         private final long version;
         private final ZonedDateTime eventTime;
@@ -198,7 +193,7 @@ public class Issue implements AggregateRoot {
         }
     }
 
-    public static class IssueContentChanged implements DomainEvent, EventElement<Issue> {
+    public static class IssueContentChanged implements DomainEvent<Issue> {
         private final UUID id;
         private final long version;
         private final ZonedDateTime eventTime;

@@ -1,13 +1,14 @@
 package io.loom.core.store;
 
+import io.loom.core.aggregate.AggregateRoot;
 import io.loom.core.event.DomainEvent;
 import java.util.UUID;
 
 /**
  * Created by mhyeon.lee on 2017. 5. 3..
  */
-public interface EventStore {
-    void saveEvents(UUID id, Iterable<DomainEvent> events);
+public interface EventStore<AggregateT extends AggregateRoot> {
+    void saveEvents(UUID id, Iterable<DomainEvent<AggregateT>> events);
 
-    Iterable<DomainEvent> getEvents(UUID id);
+    Iterable<DomainEvent<AggregateT>> getEvents(UUID id);
 }
