@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.util.UUID;
 
-public class AbstractAggregateRoot_features {
+public class AbstractAggregateRootFeatures {
     public class IssueForTesting extends AbstractAggregateRoot {
         public IssueForTesting(UUID id) {
             super(id);
