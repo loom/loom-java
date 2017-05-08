@@ -113,4 +113,31 @@ public interface IssueEvent extends DomainEvent {
             return content;
         }
     }
+
+    class IssueDeleted implements IssueEvent {
+        private final UUID id;
+        private final long version;
+        private final ZonedDateTime occurrenceTime;
+
+        public IssueDeleted(UUID id, long version) {
+            this.id = id;
+            this.version = version;
+            this.occurrenceTime = ZonedDateTime.now();
+        }
+
+        @Override
+        public UUID getAggregateId() {
+            return id;
+        }
+
+        @Override
+        public long getVersion() {
+            return version;
+        }
+
+        @Override
+        public ZonedDateTime getOccurrenceTime() {
+            return occurrenceTime;
+        }
+    }
 }
