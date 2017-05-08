@@ -13,6 +13,26 @@ public class AbstractAggregateRoot_features {
     }
 
     @Test
+    public void constructor_has_guard_clause_for_null_id() {
+        // Arrange
+        UUID id = null;
+
+        // Act
+        IllegalArgumentException expected = null;
+        try {
+            new IssueForTesting(id);
+        } catch (IllegalArgumentException e) {
+            expected = e;
+        }
+
+        // Assert
+        Assert.assertNotNull(expected);
+        Assert.assertTrue(
+                "The error message should contain the name of the parameter 'id'.",
+                expected.getMessage().contains("id"));
+    }
+
+    @Test
     public void constructor_sets_id_correctly() {
         // Arrange
         UUID id = UUID.randomUUID();
