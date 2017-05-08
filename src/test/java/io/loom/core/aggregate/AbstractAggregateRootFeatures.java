@@ -1,9 +1,9 @@
 package io.loom.core.aggregate;
 
+import java.util.UUID;
+
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.UUID;
 
 public class AbstractAggregateRootFeatures {
     public class IssueForTesting extends AbstractAggregateRoot {
