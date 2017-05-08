@@ -26,7 +26,7 @@ public abstract class AbstractAggregateRoot implements AggregateRoot {
     }
 
     @Override
-    public Iterable<DomainEvent<AggregateRoot>> pollAllPendingEvents() {
+    public Iterable<DomainEvent> pollAllPendingEvents() {
         return null;
     }
 }

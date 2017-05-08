@@ -13,7 +13,7 @@ import java.util.UUID;
  * Created by mhyeon.lee on 2017. 5. 3..
  */
 public class Issue implements AggregateRoot {
-    private final List<DomainEvent<Issue>> events = new ArrayList<>();
+    private final List<DomainEvent> events = new ArrayList<>();
     private UUID id;
     private long version;
     private String title;
@@ -79,8 +79,8 @@ public class Issue implements AggregateRoot {
     }
 
     @Override
-    public Iterable<DomainEvent<AggregateRoot>> pollAllPendingEvents() {
-        List events = new ArrayList<>(this.events);
+    public Iterable<DomainEvent> pollAllPendingEvents() {
+        List<DomainEvent> events = new ArrayList<>(this.events);
         this.events.clear();
         return Collections.unmodifiableList(events);
     }
