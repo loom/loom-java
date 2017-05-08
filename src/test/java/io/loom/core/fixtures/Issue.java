@@ -2,6 +2,7 @@ package io.loom.core.fixtures;
 
 import io.loom.core.aggregate.AggregateRoot;
 import io.loom.core.event.DomainEvent;
+import io.loom.core.event.EventElement;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -58,12 +59,8 @@ public class Issue implements AggregateRoot {
     }
 
     public void apply(DomainEvent event) {
-        if (event instanceof IssueCreated) {
-            applyIssueCreated(IssueCreated.class.cast(event));
-        } else if (event instanceof IssueTitleChanged) {
-            applyIssueTitleChanged(IssueTitleChanged.class.cast(event));
-        } else if (event instanceof IssueContentChanged) {
-            applyIssueContentChanged(IssueContentChanged.class.cast(event));
+        if (event instanceof EventElement<?>) {
+            ((EventElement<Issue>)event).applyTo(this);
         } else {
             throw new IllegalArgumentException(event.getClass() + " is not supported.");
         }
@@ -117,7 +114,7 @@ public class Issue implements AggregateRoot {
         return result;
     }
 
-    public static class IssueCreated implements DomainEvent {
+    public static class IssueCreated implements DomainEvent, EventElement<Issue> {
         private final UUID id;
         private final long version;
         private final ZonedDateTime eventTime;
@@ -154,9 +151,15 @@ public class Issue implements AggregateRoot {
         public String getContent() {
             return content;
         }
+
+        @Override
+        public Issue applyTo(Issue aggregate) {
+            aggregate.applyIssueCreated(this);
+            return aggregate;
+        }
     }
 
-    public static class IssueTitleChanged implements DomainEvent {
+    public static class IssueTitleChanged implements DomainEvent, EventElement<Issue> {
         private final UUID id;
         private final long version;
         private final ZonedDateTime eventTime;
@@ -187,9 +190,15 @@ public class Issue implements AggregateRoot {
         public String getTitle() {
             return title;
         }
+
+        @Override
+        public Issue applyTo(Issue aggregate) {
+            aggregate.applyIssueTitleChanged(this);
+            return aggregate;
+        }
     }
 
-    public static class IssueContentChanged implements DomainEvent {
+    public static class IssueContentChanged implements DomainEvent, EventElement<Issue> {
         private final UUID id;
         private final long version;
         private final ZonedDateTime eventTime;
@@ -219,6 +228,12 @@ public class Issue implements AggregateRoot {
 
         public String getContent() {
             return content;
+        }
+
+        @Override
+        public Issue applyTo(Issue aggregate) {
+            aggregate.applyIssueContentChanged(this);
+            return aggregate;
         }
     }
 }
