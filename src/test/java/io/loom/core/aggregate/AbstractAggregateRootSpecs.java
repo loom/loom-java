@@ -29,7 +29,7 @@ public class AbstractAggregateRootSpecs {
         Assert.assertNotNull(expected);
         Assert.assertTrue(
                 "The error message should contain the name of the parameter 'id'.",
-                expected.getMessage().contains("id"));
+                expected.getMessage().contains("'id'"));
     }
 
     @Test
