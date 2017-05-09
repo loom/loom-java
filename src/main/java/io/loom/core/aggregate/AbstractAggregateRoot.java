@@ -16,17 +16,17 @@ public abstract class AbstractAggregateRoot implements AggregateRoot {
     }
 
     @Override
-    public UUID getId() {
-        return id;
+    public final UUID getId() {
+        return this.id;
     }
 
     @Override
-    public long getVersion() {
+    public final long getVersion() {
         return 0;
     }
 
     @Override
-    public Iterable<DomainEvent> pollAllPendingEvents() {
+    public final Iterable<DomainEvent> pollAllPendingEvents() {
         return null;
     }
 }
