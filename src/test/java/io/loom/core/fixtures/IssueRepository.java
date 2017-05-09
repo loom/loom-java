@@ -22,6 +22,7 @@ public class IssueRepository implements Repository<Issue> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Optional<Issue> load(UUID id) {
         Iterable<DomainEvent> events = eventStore.getEvents(id);
         if (!events.iterator().hasNext()) {
