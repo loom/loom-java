@@ -23,15 +23,15 @@ public class Issue implements AggregateRoot {
     }
 
     public Issue(UUID id, String title, String body) {
-        raise(new IssueCreated(id, 0, title, body));
+        raise(new Issue.Created(id, 0, title, body));
     }
 
     public void changeTitle(String title) {
-        raise(new IssueTitleChanged(getId(), version + 1, title));
+        raise(new Issue.TitleChanged(getId(), version + 1, title));
     }
 
     public void changeContent(String content) {
-        raise(new IssueContentChanged(getId(), version + 1, content));
+        raise(new Issue.ContentChanged(getId(), version + 1, content));
     }
 
     @Override
@@ -61,19 +61,19 @@ public class Issue implements AggregateRoot {
         event.applyTo(this);
     }
 
-    private void applyIssueCreated(IssueCreated event) {
+    private void applyIssueCreated(Issue.Created event) {
         this.id = event.getAggregateId();
         this.title = event.getTitle();
         this.content = event.getContent();
         this.version = event.getVersion();
     }
 
-    private void applyIssueTitleChanged(IssueTitleChanged event) {
+    private void applyIssueTitleChanged(Issue.TitleChanged event) {
         this.title = event.getTitle();
         this.version = event.getVersion();
     }
 
-    private void applyIssueContentChanged(IssueContentChanged event) {
+    private void applyIssueContentChanged(Issue.ContentChanged event) {
         this.content = event.getContent();
         this.version = event.getVersion();
     }
@@ -109,14 +109,14 @@ public class Issue implements AggregateRoot {
         return result;
     }
 
-    public static class IssueCreated implements DomainEvent<Issue> {
+    public static class Created implements DomainEvent<Issue> {
         private final UUID id;
         private final long version;
         private final ZonedDateTime eventTime;
         private final String title;
         private final String content;
 
-        public IssueCreated(UUID id, long version, String title, String content) {
+        public Created(UUID id, long version, String title, String content) {
             this.id = id;
             this.version = version;
             this.eventTime = ZonedDateTime.now();
@@ -154,13 +154,13 @@ public class Issue implements AggregateRoot {
         }
     }
 
-    public static class IssueTitleChanged implements DomainEvent<Issue> {
+    public static class TitleChanged implements DomainEvent<Issue> {
         private final UUID id;
         private final long version;
         private final ZonedDateTime eventTime;
         private final String title;
 
-        public IssueTitleChanged(UUID id, long version, String title) {
+        public TitleChanged(UUID id, long version, String title) {
             this.id = id;
             this.version = version;
             this.eventTime = ZonedDateTime.now();
@@ -193,13 +193,13 @@ public class Issue implements AggregateRoot {
         }
     }
 
-    public static class IssueContentChanged implements DomainEvent<Issue> {
+    public static class ContentChanged implements DomainEvent<Issue> {
         private final UUID id;
         private final long version;
         private final ZonedDateTime eventTime;
         private final String content;
 
-        public IssueContentChanged(UUID id, long version, String content) {
+        public ContentChanged(UUID id, long version, String content) {
             this.id = id;
             this.version = version;
             this.eventTime = ZonedDateTime.now();
