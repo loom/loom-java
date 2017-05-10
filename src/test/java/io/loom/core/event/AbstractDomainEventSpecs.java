@@ -10,8 +10,8 @@ import org.junit.Test;
 public class AbstractDomainEventSpecs {
     public class IssueCreatedForTesting extends AbstractDomainEvent {
         public IssueCreatedForTesting(
-                UUID aggregateId, long version, ZonedDateTime occurrenceTime) {
-            super(aggregateId, version, occurrenceTime);
+                UUID aggregateId, long version) {
+            super(aggregateId, version);
         }
     }
 
@@ -23,7 +23,7 @@ public class AbstractDomainEventSpecs {
         // Act
         IllegalArgumentException expected = null;
         try {
-            new IssueCreatedForTesting(aggregateId, 1, ZonedDateTime.now());
+            new IssueCreatedForTesting(aggregateId, 1);
         } catch (IllegalArgumentException e) {
             expected = e;
         }
@@ -43,7 +43,7 @@ public class AbstractDomainEventSpecs {
         // Act
         IllegalArgumentException expected = null;
         try {
-            new IssueCreatedForTesting(UUID.randomUUID(), version, ZonedDateTime.now());
+            new IssueCreatedForTesting(UUID.randomUUID(), version);
         } catch (IllegalArgumentException e) {
             expected = e;
         }
@@ -56,40 +56,17 @@ public class AbstractDomainEventSpecs {
     }
 
     @Test
-    public void constructor_has_guard_clause_for_null_occurrenceTime() {
-        // Arrange
-        ZonedDateTime occurrenceTime = null;
-
-        // Act
-        IllegalArgumentException expected = null;
-        try {
-            new IssueCreatedForTesting(UUID.randomUUID(), 1, occurrenceTime);
-        } catch (IllegalArgumentException e) {
-            expected = e;
-        }
-
-        // Assert
-        Assert.assertNotNull(expected);
-        Assert.assertTrue(
-                "The error message should contain the name of the parameter 'occurrenceTime'.",
-                expected.getMessage().contains("'occurrenceTime'"));
-    }
-
-    @Test
     public void constructor_sets_header_properties_correctly() {
         // Arrange
         UUID aggregateId = UUID.randomUUID();
         Random random = new Random();
         long version = random.nextInt(Integer.MAX_VALUE) + 1L;
-        ZonedDateTime occurrenceTime = ZonedDateTime.now().plusNanos(random.nextInt());
 
         // Act
-        IssueCreatedForTesting sut = new IssueCreatedForTesting(
-                aggregateId, version, occurrenceTime);
+        IssueCreatedForTesting sut = new IssueCreatedForTesting(aggregateId, version);
 
         // Assert
         Assert.assertEquals(aggregateId, sut.getAggregateId());
         Assert.assertEquals(version, sut.getVersion());
-        Assert.assertEquals(occurrenceTime, sut.getOccurrenceTime());
     }
 }
