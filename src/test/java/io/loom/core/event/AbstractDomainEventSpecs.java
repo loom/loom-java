@@ -1,6 +1,7 @@
 package io.loom.core.event;
 
 import java.time.ZonedDateTime;
+import java.util.Random;
 import java.util.UUID;
 
 import org.junit.Assert;
@@ -78,8 +79,9 @@ public class AbstractDomainEventSpecs {
     public void constructor_sets_header_properties_correctly() {
         // Arrange
         UUID aggregateId = UUID.randomUUID();
-        long version = 1;
-        ZonedDateTime occurrenceTime = ZonedDateTime.now();
+        Random random = new Random();
+        long version = random.nextInt(Integer.MAX_VALUE) + 1L;
+        ZonedDateTime occurrenceTime = ZonedDateTime.now().plusNanos(random.nextInt());
 
         // Act
         IssueCreatedForTesting sut = new IssueCreatedForTesting(
