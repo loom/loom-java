@@ -8,8 +8,8 @@ import io.loom.core.fixtures.IssueEvent.IssueTitleChanged;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.UUID;
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -61,8 +61,9 @@ public class Issue implements AggregateRoot {
     }
 
     /**
-     * apply DomainEvent to Aggregate
-     * @param event
+     *apply DomainEvent to Aggregate.
+     *
+     * @param event DomainEvent
      */
     public void apply(DomainEvent event) {
         if (event instanceof IssueCreated) {
