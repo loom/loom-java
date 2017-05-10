@@ -1,11 +1,10 @@
 package io.loom.core.event;
 
-import java.time.ZonedDateTime;
-import java.util.Random;
-import java.util.UUID;
-
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Random;
+import java.util.UUID;
 
 public class AbstractDomainEventSpecs {
     public class IssueCreatedForTesting extends AbstractDomainEvent {
