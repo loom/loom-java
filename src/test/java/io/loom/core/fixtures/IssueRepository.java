@@ -22,13 +22,14 @@ public class IssueRepository implements Repository<Issue> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Optional<Issue> load(UUID id) {
         Iterable<DomainEvent> events = eventStore.getEvents(id);
         if (!events.iterator().hasNext()) {
             return Optional.empty();
         }
         Issue issue = new Issue();
-        events.forEach(issue::apply);
+        events.forEach(x -> x.applyTo(issue));
         return Optional.of(issue);
     }
 }
