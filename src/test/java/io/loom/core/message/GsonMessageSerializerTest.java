@@ -12,16 +12,16 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.internal.Streams;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.loom.core.event.AbstractDomainEvent;
 import io.loom.core.event.DomainEvent;
+import io.loom.core.fixtures.TitleChanged;
 
-import java.beans.ConstructorProperties;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.time.Instant;
@@ -32,15 +32,15 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.UUID;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * Created by mhyeon.lee on 2017. 5. 14..
- */
 public class GsonMessageSerializerTest {
+    private final MessageSerializer messageSerializer = new GsonMessageSerializer();
+
     @Test
     public void gson_serialize_include_type() {
         // Arrange
@@ -51,30 +51,37 @@ public class GsonMessageSerializerTest {
         TitleChanged event = new TitleChanged(aggregateId, version, occurrenceTime, title);
 
         // Act
-        String sut = GsonUtils.serialize(event);
+        String sut = messageSerializer.serialize(event);
 
         // Assert
-        Assert.assertTrue(sut.contains(
-                "\"@type\": \"io.loom.core.message.GsonMessageSerializerTest$TitleChanged"));
+        Assert.assertTrue(sut.contains("\"@type\": \"io.loom.core.fixtures.TitleChanged"));
         Assert.assertTrue(sut.contains("\"aggregateId\": \"" + aggregateId.toString() + "\""));
-        Assert.assertTrue(sut.contains("\"version\": " + 1));
-        Assert.assertTrue(sut.contains("\"occurrenceTime\": " + occurrenceTime.toEpochSecond()));
+        Assert.assertTrue(sut.contains("\"version\": " + version));
+        Assert.assertTrue(sut.contains(
+                "\"occurrenceTime\": " + occurrenceTime.toInstant().toEpochMilli()));
         Assert.assertTrue(sut.contains("\"title\": " + "\"" + title + "\""));
 
     }
 
     @Test
-    public void gson_deserialize_with_type() throws IOException {
+    public void gson_deserialize_with_type() {
         // Arrange
         UUID aggregateId = UUID.randomUUID();
         long version = 1;
-        ZonedDateTime occurrenceTime = ZonedDateTime.now();
+        long occurrenceTime = ZonedDateTime.now().toInstant().toEpochMilli();
         String title = "issue-title";
-        TitleChanged event = new TitleChanged(aggregateId, version, occurrenceTime, title);
-        String json = GsonUtils.serialize(event);
+        String json = "{\n  "
+                + new StringJoiner(",\n  ")
+                .add("\"@type\" : \"io.loom.core.fixtures.TitleChanged\"")
+                .add("\"aggregateId\" : \"" + aggregateId.toString() + "\"")
+                .add("\"version\" : " + version)
+                .add("\"occurrenceTime\" : " + occurrenceTime)
+                .add("\"title\" : " + "\"" + title + "\"")
+                .toString()
+                + "\n}";
 
         // Act
-        Object sut = GsonUtils.deserialize(json);
+        Object sut = messageSerializer.deserialize(json);
 
         // Assert
         Assert.assertTrue(sut instanceof DomainEvent);
@@ -84,26 +91,11 @@ public class GsonMessageSerializerTest {
         Assert.assertEquals(aggregateId, deserialized.getAggregateId());
         Assert.assertEquals(version, deserialized.getVersion());
         Assert.assertEquals(
-                occurrenceTime.toEpochSecond(), deserialized.getOccurrenceTime().toEpochSecond());
+                occurrenceTime, deserialized.getOccurrenceTime().toInstant().toEpochMilli());
         Assert.assertEquals(title, deserialized.getTitle());
     }
 
-    static class TitleChanged extends AbstractDomainEvent {
-        private final String title;
-
-        @ConstructorProperties({"aggregateId", "version", "occurrenceTime", "title"})
-        public TitleChanged(
-                UUID aggregateId, long version, ZonedDateTime occurrenceTime, String title) {
-            super(aggregateId, version, occurrenceTime);
-            this.title = title;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-    }
-
-    static class GsonUtils {
+    private static class GsonMessageSerializer implements MessageSerializer {
         private static final JsonParser PARSER = new JsonParser();
         private static final String TYPE_FIELD_NAME = "@type";
         private static final Set<Class<?>> REGISTERED_TYPES
@@ -113,7 +105,8 @@ public class GsonMessageSerializerTest {
                 .registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeConverter());
         private static Gson gson = GSON_BUILDER.create();
 
-        public static String serialize(Object message) {
+        @Override
+        public String serialize(Object message) {
             Class<?> type = message.getClass();
             if (!REGISTERED_TYPES.contains(type)) {
                 register(type);
@@ -121,12 +114,17 @@ public class GsonMessageSerializerTest {
             return gson.toJson(message);
         }
 
-        public static Object deserialize(String json) {
+        @Override
+        public Object deserialize(String json) {
             JsonObject jsonObj = PARSER.parse(json).getAsJsonObject();
-            String typeName = jsonObj.get(TYPE_FIELD_NAME).getAsString();
+            JsonElement typeElement = jsonObj.get(TYPE_FIELD_NAME);
+            if (typeElement == null) {
+                throw new JsonSyntaxException(
+                        "json for deserialize must hove " + TYPE_FIELD_NAME + " : " + json);
+            }
             Class<?> type;
             try {
-                type = Class.forName(typeName);
+                type = Class.forName(typeElement.getAsString());
             } catch (ClassNotFoundException ex) {
                 throw new JsonIOException(ex);
             }
@@ -143,7 +141,7 @@ public class GsonMessageSerializerTest {
         }
     }
 
-    static class ZonedDateTimeConverter implements
+    private static class ZonedDateTimeConverter implements
             JsonSerializer<ZonedDateTime>, JsonDeserializer<ZonedDateTime> {
         @Override
         public JsonElement serialize(
@@ -166,7 +164,7 @@ public class GsonMessageSerializerTest {
     // type 을 Runtime 에 등록할 수 있는 TypeAdapterFactory 입니다
     // gson 에서 빌드 패키지에 포함시키지 않고 별도로 가져가서 사용하라고 제공하고 있습니다
     // https://github.com/google/gson/blob/master/extras/src/main/java/com/google/gson/typeadapters/RuntimeTypeAdapterFactory.java
-    static class RuntimeTypeAdapterFactory implements TypeAdapterFactory {
+    private static class RuntimeTypeAdapterFactory implements TypeAdapterFactory {
         private final Class<?> baseType;
         private final String typeFieldName;
         private final Map<String, Class<?>> labelToSubtype = new LinkedHashMap<String, Class<?>>();
