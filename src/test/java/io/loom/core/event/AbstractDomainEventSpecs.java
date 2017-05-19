@@ -1,10 +1,11 @@
 package io.loom.core.event;
 
+import io.loom.core.aggregate.VersionedAggregate;
+
 import java.time.ZonedDateTime;
 import java.util.Random;
 import java.util.UUID;
 
-import io.loom.core.aggregate.VersionedAggregate;
 import org.junit.Assert;
 import org.junit.Test;
 

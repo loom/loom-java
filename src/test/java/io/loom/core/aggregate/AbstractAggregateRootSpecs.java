@@ -22,6 +22,13 @@ public class AbstractAggregateRootSpecs {
         private long version;
         private ZonedDateTime occurrenceTime;
 
+        /**
+         * Instantiates a new Issue event for testing.
+         *
+         * @param aggregateId    the aggregate id
+         * @param version        the version
+         * @param occurrenceTime the occurrence time
+         */
         public IssueEventForTesting(UUID aggregateId, long version, ZonedDateTime occurrenceTime) {
             this.aggregateId = aggregateId;
             this.version = version;
