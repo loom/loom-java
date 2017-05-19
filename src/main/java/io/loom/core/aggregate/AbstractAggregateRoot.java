@@ -4,8 +4,9 @@ import io.loom.core.event.DomainEvent;
 
 import java.util.UUID;
 
-public abstract class AbstractAggregateRoot implements AggregateRoot {
+public abstract class AbstractAggregateRoot implements AggregateRoot, VersionedAggregate {
     private final UUID id;
+    private long version;
 
     protected AbstractAggregateRoot(UUID id) {
         if (id == null) {
@@ -13,6 +14,7 @@ public abstract class AbstractAggregateRoot implements AggregateRoot {
         }
 
         this.id = id;
+        this.version = 0;
     }
 
     @Override
@@ -22,7 +24,7 @@ public abstract class AbstractAggregateRoot implements AggregateRoot {
 
     @Override
     public final long getVersion() {
-        return 0;
+        return version;
     }
 
     @Override

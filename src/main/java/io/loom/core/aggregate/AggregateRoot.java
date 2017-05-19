@@ -10,7 +10,5 @@ import java.util.UUID;
 public interface AggregateRoot extends Serializable {
     UUID getId();
 
-    long getVersion();
-
     Iterable<DomainEvent> pollAllPendingEvents();
 }

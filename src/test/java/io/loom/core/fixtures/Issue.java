@@ -40,7 +40,6 @@ public class Issue implements AggregateRoot {
         return id;
     }
 
-    @Override
     public long getVersion() {
         return version;
     }
