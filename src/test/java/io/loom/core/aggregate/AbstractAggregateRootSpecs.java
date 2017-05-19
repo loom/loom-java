@@ -54,4 +54,24 @@ public class AbstractAggregateRootSpecs {
         // Assert
         Assert.assertEquals(0, sut.getVersion());
     }
+
+    @Test
+    public void raise_has_guard_clause_for_null_domainEvent() {
+        // Arrange
+        IssueForTesting issue = new IssueForTesting(UUID.randomUUID());
+
+        // Act
+        IllegalArgumentException expected = null;
+        try {
+            issue.raise(null);
+        } catch (IllegalArgumentException e) {
+            expected = e;
+        }
+
+        // Assert
+        Assert.assertNotNull(expected);
+        Assert.assertTrue(
+                "The error message should contain the name of the parameter 'domainEvent'.",
+                expected.getMessage().contains("'domainEvent'"));
+    }
 }

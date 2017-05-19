@@ -17,6 +17,14 @@ public abstract class AbstractAggregateRoot implements AggregateRoot, VersionedA
         this.version = 0;
     }
 
+    protected final void raise(DomainEvent domainEvent) {
+        if (domainEvent == null) {
+            throw new IllegalArgumentException("The parameter 'domainEvent' cannot be null.");
+        }
+
+        // apply and pending
+    }
+
     @Override
     public final UUID getId() {
         return this.id;
