@@ -1,6 +1,7 @@
 package io.loom.core.aggregate;
 
 import io.loom.core.event.DomainEvent;
+import io.loom.core.event.LazyInitializedDomainEvent;
 
 import java.util.UUID;
 
@@ -22,7 +23,15 @@ public abstract class AbstractAggregateRoot implements AggregateRoot, VersionedA
             throw new IllegalArgumentException("The parameter 'domainEvent' cannot be null.");
         }
 
-        // apply and pending
+        if (domainEvent instanceof LazyInitializedDomainEvent) {
+            LazyInitializedDomainEvent lazyEvent = (LazyInitializedDomainEvent) domainEvent;
+            if (!lazyEvent.isInitialized()) {
+                lazyEvent.afterHeaderPropertiesSets(this);
+            }
+        }
+
+        // TODO: guard clause domain event header properties sets
+        // TODO: apply and pending
     }
 
     @Override
