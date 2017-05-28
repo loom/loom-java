@@ -1,10 +1,9 @@
 package io.loom.core.messaging;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.io.IOException;
 
 public class JacksonMessageSerializerSpecs {
     @Test
@@ -165,7 +164,8 @@ public class JacksonMessageSerializerSpecs {
     @Test
     public void sut_serializes_final_immutable_message_having_json_creator_correctly() {
         // Arrange
-        FinalImmutableMessageWithJsonCreator message = new FinalImmutableMessageWithJsonCreator(1024, "foo");
+        FinalImmutableMessageWithJsonCreator message =
+                new FinalImmutableMessageWithJsonCreator(1024, "foo");
         JacksonMessageSerializer sut = new JacksonMessageSerializer();
 
         // Act
@@ -178,7 +178,8 @@ public class JacksonMessageSerializerSpecs {
         Assert.assertTrue(
                 "The actual value is not an instance of FinalImmutableMessageWithJsonCreator.",
                 actual instanceof FinalImmutableMessageWithJsonCreator);
-        FinalImmutableMessageWithJsonCreator actualMessage = (FinalImmutableMessageWithJsonCreator)actual;
+        FinalImmutableMessageWithJsonCreator actualMessage =
+                (FinalImmutableMessageWithJsonCreator)actual;
         Assert.assertEquals(message.getIntProperty(), actualMessage.getIntProperty());
         Assert.assertEquals(message.getStringProperty(), actualMessage.getStringProperty());
     }
