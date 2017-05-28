@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder;
 
 import java.io.IOException;
 
 public class JacksonMessageSerializer implements MessageSerializer {
-    private class TypeResolverBuilder extends ObjectMapper.DefaultTypeResolverBuilder {
+    private class InternalTypeResolverBuilder extends ObjectMapper.DefaultTypeResolverBuilder {
 
-        TypeResolverBuilder() {
+        InternalTypeResolverBuilder() {
             super(ObjectMapper.DefaultTyping.NON_FINAL);
         }
 
@@ -23,7 +24,7 @@ public class JacksonMessageSerializer implements MessageSerializer {
     private final ObjectMapper mapper;
 
     {
-        com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder<?> typer = new TypeResolverBuilder();
+        TypeResolverBuilder<?> typer = new InternalTypeResolverBuilder();
         typer = typer.init(JsonTypeInfo.Id.CLASS, null);
         typer = typer.inclusion(JsonTypeInfo.As.PROPERTY);
         typer = typer.typeProperty("$type");
@@ -39,7 +40,8 @@ public class JacksonMessageSerializer implements MessageSerializer {
         try {
             return mapper.writeValueAsString(message);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Could not serialize message. See the cause for details.", e);
+            String errorMessage = "Could not serialize message. See the cause for details.";
+            throw new RuntimeException(errorMessage, e);
         }
     }
 
@@ -52,7 +54,8 @@ public class JacksonMessageSerializer implements MessageSerializer {
         try {
             return mapper.readValue(value, Object.class);
         } catch (IOException e) {
-            throw new RuntimeException("Could not deserialize message. See the cause for details.", e);
+            String errorMessage = "Could not deserialize message. See the cause for details.";
+            throw new RuntimeException(errorMessage, e);
         }
     }
 }
