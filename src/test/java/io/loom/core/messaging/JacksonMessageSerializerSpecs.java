@@ -183,4 +183,32 @@ public class JacksonMessageSerializerSpecs {
         Assert.assertEquals(message.getIntProperty(), actualMessage.getIntProperty());
         Assert.assertEquals(message.getStringProperty(), actualMessage.getStringProperty());
     }
+
+    @Test
+    public void sut_serializes_message_having_complex_type_property_correctly() {
+        // Arrange
+        MessageWithComplexTypeProperty message = new MessageWithComplexTypeProperty();
+        message.setComplexProperty(new ComplexObject());
+        message.getComplexProperty().setIntProperty(1024);
+        message.getComplexProperty().setStringProperty("foo");
+        JacksonMessageSerializer sut = new JacksonMessageSerializer();
+
+        // Act
+        String value = sut.serialize(message);
+        System.out.println("The serialized value is '" + value + "'.");
+        Object actual = sut.deserialize(value);
+
+        // Assert
+        Assert.assertNotNull("The actual value is null.", actual);
+        Assert.assertTrue(
+                "The actual value is not an instance of MessageWithComplexTypeProperty.",
+                actual instanceof MessageWithComplexTypeProperty);
+        MessageWithComplexTypeProperty actualMessage = (MessageWithComplexTypeProperty)actual;
+        Assert.assertEquals(
+                message.getComplexProperty().getIntProperty(),
+                actualMessage.getComplexProperty().getIntProperty());
+        Assert.assertEquals(
+                message.getComplexProperty().getStringProperty(),
+                actualMessage.getComplexProperty().getStringProperty());
+    }
 }
