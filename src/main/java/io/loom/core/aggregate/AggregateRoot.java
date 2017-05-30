@@ -6,7 +6,5 @@ import java.util.UUID;
 public interface AggregateRoot {
     UUID getId();
 
-    long getVersion();
-
     Iterable<DomainEvent> pollAllPendingEvents();
 }
