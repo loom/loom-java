@@ -39,21 +39,29 @@ public class JacksonMessageSerializer implements MessageSerializer {
 
         Class<?> type = message.getClass();
         if (type.equals(Boolean.class)) {
-            throw new IllegalArgumentException("The parameter 'message' cannot be of java.lang.Boolean.");
+            String errorMessage = "The parameter 'message' cannot be of java.lang.Boolean.";
+            throw new IllegalArgumentException(errorMessage);
         } else if (type.equals(Byte.class)) {
-            throw new IllegalArgumentException("The parameter 'message' cannot be of java.lang.Byte.");
+            String errorMessage = "The parameter 'message' cannot be of java.lang.Byte.";
+            throw new IllegalArgumentException(errorMessage);
         } else if (type.equals(Character.class)) {
-            throw new IllegalArgumentException("The parameter 'message' cannot be of java.lang.Character.");
+            String errorMessage = "The parameter 'message' cannot be of java.lang.Character.";
+            throw new IllegalArgumentException(errorMessage);
         } else if (type.equals(Float.class)) {
-            throw new IllegalArgumentException("The parameter 'message' cannot be of java.lang.Float.");
+            String errorMessage = "The parameter 'message' cannot be of java.lang.Float.";
+            throw new IllegalArgumentException(errorMessage);
         } else if (type.equals(Integer.class)) {
-            throw new IllegalArgumentException("The parameter 'message' cannot be of java.lang.Integer.");
+            String errorMessage = "The parameter 'message' cannot be of java.lang.Integer.";
+            throw new IllegalArgumentException(errorMessage);
         } else if (type.equals(Long.class)) {
-            throw new IllegalArgumentException("The parameter 'message' cannot be of java.lang.Long.");
+            String errorMessage = "The parameter 'message' cannot be of java.lang.Long.";
+            throw new IllegalArgumentException(errorMessage);
         } else if (type.equals(Short.class)) {
-            throw new IllegalArgumentException("The parameter 'message' cannot be of java.lang.Short.");
+            String errorMessage = "The parameter 'message' cannot be of java.lang.Short.";
+            throw new IllegalArgumentException(errorMessage);
         } else if (type.equals(Double.class)) {
-            throw new IllegalArgumentException("The parameter 'message' cannot be of java.lang.Double.");
+            String errorMessage = "The parameter 'message' cannot be of java.lang.Double.";
+            throw new IllegalArgumentException(errorMessage);
         }
 
         try {
