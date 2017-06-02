@@ -37,6 +37,25 @@ public class JacksonMessageSerializer implements MessageSerializer {
             throw new IllegalArgumentException("The parameter 'message' cannot be null.");
         }
 
+        Class<?> type = message.getClass();
+        if (type.equals(Boolean.class)) {
+            throw new IllegalArgumentException("The parameter 'message' cannot be of java.lang.Boolean.");
+        } else if (type.equals(Byte.class)) {
+            throw new IllegalArgumentException("The parameter 'message' cannot be of java.lang.Byte.");
+        } else if (type.equals(Character.class)) {
+            throw new IllegalArgumentException("The parameter 'message' cannot be of java.lang.Character.");
+        } else if (type.equals(Float.class)) {
+            throw new IllegalArgumentException("The parameter 'message' cannot be of java.lang.Float.");
+        } else if (type.equals(Integer.class)) {
+            throw new IllegalArgumentException("The parameter 'message' cannot be of java.lang.Integer.");
+        } else if (type.equals(Long.class)) {
+            throw new IllegalArgumentException("The parameter 'message' cannot be of java.lang.Long.");
+        } else if (type.equals(Short.class)) {
+            throw new IllegalArgumentException("The parameter 'message' cannot be of java.lang.Short.");
+        } else if (type.equals(Double.class)) {
+            throw new IllegalArgumentException("The parameter 'message' cannot be of java.lang.Double.");
+        }
+
         try {
             return mapper.writeValueAsString(message);
         } catch (JsonProcessingException e) {
