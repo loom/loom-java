@@ -1,12 +1,8 @@
 package io.loom.core.aggregate;
 
+import io.loom.core.entity.VersionedEntity;
 import io.loom.core.event.DomainEvent;
-import java.util.UUID;
 
-public interface AggregateRoot {
-    UUID getId();
-
-    long getVersion();
-
+public interface AggregateRoot extends VersionedEntity {
     Iterable<DomainEvent> pollAllPendingEvents();
 }
