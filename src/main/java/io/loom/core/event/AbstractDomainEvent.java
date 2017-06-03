@@ -8,6 +8,10 @@ public abstract class AbstractDomainEvent implements DomainEvent {
     private final long version;
     private final ZonedDateTime occurrenceTime;
 
+    protected AbstractDomainEvent(UUID aggregateId, long version) {
+        this(aggregateId, version, ZonedDateTime.now());
+    }
+
     protected AbstractDomainEvent(UUID aggregateId, long version, ZonedDateTime occurrenceTime) {
         if (aggregateId == null) {
             throw new IllegalArgumentException("The parameter 'aggregateId' cannot be null.");
