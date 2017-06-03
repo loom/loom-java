@@ -37,6 +37,33 @@ public class JacksonMessageSerializer implements MessageSerializer {
             throw new IllegalArgumentException("The parameter 'message' cannot be null.");
         }
 
+        Class<?> type = message.getClass();
+        if (type.equals(Boolean.class)) {
+            String errorMessage = "The parameter 'message' cannot be of java.lang.Boolean.";
+            throw new IllegalArgumentException(errorMessage);
+        } else if (type.equals(Byte.class)) {
+            String errorMessage = "The parameter 'message' cannot be of java.lang.Byte.";
+            throw new IllegalArgumentException(errorMessage);
+        } else if (type.equals(Character.class)) {
+            String errorMessage = "The parameter 'message' cannot be of java.lang.Character.";
+            throw new IllegalArgumentException(errorMessage);
+        } else if (type.equals(Float.class)) {
+            String errorMessage = "The parameter 'message' cannot be of java.lang.Float.";
+            throw new IllegalArgumentException(errorMessage);
+        } else if (type.equals(Integer.class)) {
+            String errorMessage = "The parameter 'message' cannot be of java.lang.Integer.";
+            throw new IllegalArgumentException(errorMessage);
+        } else if (type.equals(Long.class)) {
+            String errorMessage = "The parameter 'message' cannot be of java.lang.Long.";
+            throw new IllegalArgumentException(errorMessage);
+        } else if (type.equals(Short.class)) {
+            String errorMessage = "The parameter 'message' cannot be of java.lang.Short.";
+            throw new IllegalArgumentException(errorMessage);
+        } else if (type.equals(Double.class)) {
+            String errorMessage = "The parameter 'message' cannot be of java.lang.Double.";
+            throw new IllegalArgumentException(errorMessage);
+        }
+
         try {
             return mapper.writeValueAsString(message);
         } catch (JsonProcessingException e) {
