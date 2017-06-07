@@ -211,4 +211,188 @@ public class JacksonMessageSerializerSpecs {
                 message.getComplexProperty().getStringProperty(),
                 actualMessage.getComplexProperty().getStringProperty());
     }
+
+    @Test
+    public void serialize_has_guard_clause_for_Boolean_message() {
+        // Arrange
+        Object message = new Boolean(true);
+        JacksonMessageSerializer sut = new JacksonMessageSerializer();
+
+        // Act
+        IllegalArgumentException expected = null;
+        try {
+            sut.serialize(message);
+        } catch (IllegalArgumentException e) {
+            expected = e;
+        }
+
+        // Assert
+        Assert.assertTrue(
+                "serialize() did not throw IllegalArgumentException.",
+                expected != null);
+        Assert.assertTrue(
+                "The error message should contain the name of the parameter 'message'.",
+                expected.getMessage().contains("'message'"));
+    }
+
+    @Test
+    public void serialize_has_guard_clause_for_Byte_message() {
+        // Arrange
+        Object message = new Byte((byte)16);
+        JacksonMessageSerializer sut = new JacksonMessageSerializer();
+
+        // Act
+        IllegalArgumentException expected = null;
+        try {
+            sut.serialize(message);
+        } catch (IllegalArgumentException e) {
+            expected = e;
+        }
+
+        // Assert
+        Assert.assertTrue(
+                "serialize() did not throw IllegalArgumentException.",
+                expected != null);
+        Assert.assertTrue(
+                "The error message should contain the name of the parameter 'message'.",
+                expected.getMessage().contains("'message'"));
+    }
+
+    @Test
+    public void serialize_has_guard_clause_for_Character_message() {
+        // Arrange
+        Object message = new Character('f');
+        JacksonMessageSerializer sut = new JacksonMessageSerializer();
+
+        // Act
+        IllegalArgumentException expected = null;
+        try {
+            sut.serialize(message);
+        } catch (IllegalArgumentException e) {
+            expected = e;
+        }
+
+        // Assert
+        Assert.assertTrue(
+                "serialize() did not throw IllegalArgumentException.",
+                expected != null);
+        Assert.assertTrue(
+                "The error message should contain the name of the parameter 'message'.",
+                expected.getMessage().contains("'message'"));
+    }
+
+    @Test
+    public void serialize_has_guard_clause_for_Float_message() {
+        // Arrange
+        Object message = new Float(1024);
+        JacksonMessageSerializer sut = new JacksonMessageSerializer();
+
+        // Act
+        IllegalArgumentException expected = null;
+        try {
+            sut.serialize(message);
+        } catch (IllegalArgumentException e) {
+            expected = e;
+        }
+
+        // Assert
+        Assert.assertTrue(
+                "serialize() did not throw IllegalArgumentException.",
+                expected != null);
+        Assert.assertTrue(
+                "The error message should contain the name of the parameter 'message'.",
+                expected.getMessage().contains("'message'"));
+    }
+
+    @Test
+    public void serialize_has_guard_clause_for_Integer_message() {
+        // Arrange
+        Object message = new Integer(1024);
+        JacksonMessageSerializer sut = new JacksonMessageSerializer();
+
+        // Act
+        IllegalArgumentException expected = null;
+        try {
+            sut.serialize(message);
+        } catch (IllegalArgumentException e) {
+            expected = e;
+        }
+
+        // Assert
+        Assert.assertTrue(
+                "serialize() did not throw IllegalArgumentException.",
+                expected != null);
+        Assert.assertTrue(
+                "The error message should contain the name of the parameter 'message'.",
+                expected.getMessage().contains("'message'"));
+    }
+
+    @Test
+    public void serialize_has_guard_clause_for_Long_message() {
+        // Arrange
+        Object message = new Long(1024);
+        JacksonMessageSerializer sut = new JacksonMessageSerializer();
+
+        // Act
+        IllegalArgumentException expected = null;
+        try {
+            sut.serialize(message);
+        } catch (IllegalArgumentException e) {
+            expected = e;
+        }
+
+        // Assert
+        Assert.assertTrue(
+                "serialize() did not throw IllegalArgumentException.",
+                expected != null);
+        Assert.assertTrue(
+                "The error message should contain the name of the parameter 'message'.",
+                expected.getMessage().contains("'message'"));
+    }
+
+    @Test
+    public void serialize_has_guard_clause_for_Short_message() {
+        // Arrange
+        Object message = new Short((short)1024);
+        JacksonMessageSerializer sut = new JacksonMessageSerializer();
+
+        // Act
+        IllegalArgumentException expected = null;
+        try {
+            sut.serialize(message);
+        } catch (IllegalArgumentException e) {
+            expected = e;
+        }
+
+        // Assert
+        Assert.assertTrue(
+                "serialize() did not throw IllegalArgumentException.",
+                expected != null);
+        Assert.assertTrue(
+                "The error message should contain the name of the parameter 'message'.",
+                expected.getMessage().contains("'message'"));
+    }
+
+    @Test
+    public void serialize_has_guard_clause_for_Double_message() {
+        // Arrange
+        Object message = new Double(1024);
+        JacksonMessageSerializer sut = new JacksonMessageSerializer();
+
+        // Act
+        IllegalArgumentException expected = null;
+        try {
+            sut.serialize(message);
+        } catch (IllegalArgumentException e) {
+            expected = e;
+        }
+
+        // Assert
+        Assert.assertTrue(
+                "serialize() did not throw IllegalArgumentException.",
+                expected != null);
+        Assert.assertTrue(
+                "The error message should contain the name of the parameter 'message'.",
+                expected.getMessage().contains("'message'"));
+    }
 }
