@@ -2,6 +2,9 @@ package io.loom.core.messaging;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.util.Random;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -394,5 +397,27 @@ public class JacksonMessageSerializerSpecs {
         Assert.assertTrue(
                 "The error message should contain the name of the parameter 'message'.",
                 expected.getMessage().contains("'message'"));
+    }
+
+    @Test
+    public void sut_serializes_properties_of_ZonedDateTime_correctly() {
+        // Arrange
+        Random random = new Random();
+        MessageWithZonedDateTimeProperty message = new MessageWithZonedDateTimeProperty(
+                ZonedDateTime.now().plusNanos(random.nextInt()));
+        JacksonMessageSerializer sut = new JacksonMessageSerializer();
+
+        // Act
+        String value = sut.serialize(message);
+        System.out.println("The serialized value is '" + value + "'.");
+        Object actual = sut.deserialize(value);
+
+        // Assert
+        Assert.assertNotNull("The actual value is null.", actual);
+        Assert.assertTrue(
+                "The actual value is not an instance of MessageWithZonedDateTimeProperty.",
+                actual instanceof MessageWithZonedDateTimeProperty);
+        MessageWithZonedDateTimeProperty actualMessage = (MessageWithZonedDateTimeProperty)actual;
+        Assert.assertEquals(message.getDateTime().toEpochSecond(), actualMessage.getDateTime().toEpochSecond());
     }
 }

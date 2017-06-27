@@ -5,8 +5,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
+import java.time.ZonedDateTime;
 
 public class JacksonMessageSerializer implements MessageSerializer {
     private class InternalTypeResolverBuilder extends ObjectMapper.DefaultTypeResolverBuilder {
@@ -17,7 +19,7 @@ public class JacksonMessageSerializer implements MessageSerializer {
 
         @Override
         public boolean useForType(JavaType t) {
-            return !t.isPrimitive();
+            return !t.isPrimitive() && t.getRawClass() != ZonedDateTime.class;
         }
     }
 
@@ -28,7 +30,9 @@ public class JacksonMessageSerializer implements MessageSerializer {
         typer = typer.init(JsonTypeInfo.Id.CLASS, null);
         typer = typer.inclusion(JsonTypeInfo.As.PROPERTY);
         typer = typer.typeProperty("$type");
-        mapper = new ObjectMapper().setDefaultTyping(typer);
+        mapper = new ObjectMapper()
+                .registerModule(new JavaTimeModule())
+                .setDefaultTyping(typer);
     }
 
     @Override
