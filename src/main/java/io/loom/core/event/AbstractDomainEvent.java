@@ -1,14 +1,30 @@
 package io.loom.core.event;
 
+import io.loom.core.entity.VersionedEntity;
+
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
 public abstract class AbstractDomainEvent implements DomainEvent {
-    private final UUID aggregateId;
-    private final long version;
-    private final ZonedDateTime occurrenceTime;
+    private UUID aggregateId;
+    private long version;
+    private ZonedDateTime occurrenceTime;
+
+    protected AbstractDomainEvent() {
+    }
 
     protected AbstractDomainEvent(UUID aggregateId, long version, ZonedDateTime occurrenceTime) {
+        guardHeaderProperties(aggregateId, version, occurrenceTime);
+        this.aggregateId = aggregateId;
+        this.version = version;
+        this.occurrenceTime = occurrenceTime;
+    }
+
+    @Override
+    public void raise(VersionedEntity versionedEntity) {
+        UUID aggregateId = versionedEntity.getId();
+        long version = versionedEntity.getVersion();
+        ZonedDateTime occurrenceTime = ZonedDateTime.now();
         guardHeaderProperties(aggregateId, version, occurrenceTime);
         this.aggregateId = aggregateId;
         this.version = version;
