@@ -9,16 +9,7 @@ public abstract class AbstractDomainEvent implements DomainEvent {
     private final ZonedDateTime occurrenceTime;
 
     protected AbstractDomainEvent(UUID aggregateId, long version, ZonedDateTime occurrenceTime) {
-        if (aggregateId == null) {
-            throw new IllegalArgumentException("The parameter 'aggregateId' cannot be null.");
-        }
-        if (version < 1) {
-            throw new IllegalArgumentException("The parameter 'version' must be greater than 0.");
-        }
-        if (occurrenceTime == null) {
-            throw new IllegalArgumentException("The parameter 'occurrenceTime' cannot be null.");
-        }
-
+        guardHeaderProperties(aggregateId, version, occurrenceTime);
         this.aggregateId = aggregateId;
         this.version = version;
         this.occurrenceTime = occurrenceTime;
@@ -37,5 +28,18 @@ public abstract class AbstractDomainEvent implements DomainEvent {
     @Override
     public final ZonedDateTime getOccurrenceTime() {
         return this.occurrenceTime;
+    }
+
+    private static void guardHeaderProperties(
+            UUID aggregateId, long version, ZonedDateTime occurrenceTime) {
+        if (aggregateId == null) {
+            throw new IllegalArgumentException("The parameter 'aggregateId' cannot be null.");
+        }
+        if (version < 1) {
+            throw new IllegalArgumentException("The parameter 'version' must be greater than 0.");
+        }
+        if (occurrenceTime == null) {
+            throw new IllegalArgumentException("The parameter 'occurrenceTime' cannot be null.");
+        }
     }
 }
