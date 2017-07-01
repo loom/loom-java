@@ -2,7 +2,9 @@ package io.loom.core.messaging;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
+import java.time.Clock;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 import org.junit.Assert;
@@ -404,7 +406,7 @@ public class JacksonMessageSerializerSpecs {
         // Arrange
         Random random = new Random();
         MessageWithZonedDateTimeProperty message = new MessageWithZonedDateTimeProperty(
-                ZonedDateTime.now().plusNanos(random.nextInt()));
+                ZonedDateTime.now(Clock.systemUTC()).plusNanos(random.nextInt()));
         JacksonMessageSerializer sut = new JacksonMessageSerializer();
 
         // Act
@@ -418,6 +420,24 @@ public class JacksonMessageSerializerSpecs {
                 "The actual value is not an instance of MessageWithZonedDateTimeProperty.",
                 actual instanceof MessageWithZonedDateTimeProperty);
         MessageWithZonedDateTimeProperty actualMessage = (MessageWithZonedDateTimeProperty)actual;
-        Assert.assertEquals(message.getDateTime().toEpochSecond(), actualMessage.getDateTime().toEpochSecond());
+        Assert.assertEquals(
+                message.getDateTime().toEpochSecond(),
+                actualMessage.getDateTime().toEpochSecond());
+    }
+
+    @Test
+    public void sut_serializes_ZonedDateTime_as_iso_8601() {
+        // Arrange
+        ZonedDateTime dateTime = ZonedDateTime.now(Clock.systemUTC());
+        MessageWithZonedDateTimeProperty message = new MessageWithZonedDateTimeProperty(dateTime);
+        JacksonMessageSerializer sut = new JacksonMessageSerializer();
+
+        // Act
+        String actual = sut.serialize(message);
+        System.out.println("The serialized value is '" + actual + "'.");
+
+        // Assert
+        String formatted = dateTime.format(DateTimeFormatter.ISO_DATE_TIME);
+        Assert.assertTrue(actual.contains("\"dateTime\":\"" + formatted + "\""));
     }
 }
