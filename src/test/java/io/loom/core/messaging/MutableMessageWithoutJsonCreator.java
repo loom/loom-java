@@ -1,6 +1,6 @@
 package io.loom.core.messaging;
 
-class MutableMessageWithoutJsonCreator {
+class MutableMessageWithoutJsonCreator implements Message {
     private int intField;
     private String stringField;
 

@@ -1,4 +1,4 @@
 package io.loom.core.messaging;
 
-class EmptyObject {
+class EmptyObject implements Message {
 }
