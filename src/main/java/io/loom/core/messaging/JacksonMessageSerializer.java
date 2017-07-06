@@ -38,36 +38,9 @@ public class JacksonMessageSerializer implements MessageSerializer {
     }
 
     @Override
-    public String serialize(Object message) {
+    public String serialize(Message message) {
         if (message == null) {
             throw new IllegalArgumentException("The parameter 'message' cannot be null.");
-        }
-
-        Class<?> type = message.getClass();
-        if (type.equals(Boolean.class)) {
-            String errorMessage = "The parameter 'message' cannot be of java.lang.Boolean.";
-            throw new IllegalArgumentException(errorMessage);
-        } else if (type.equals(Byte.class)) {
-            String errorMessage = "The parameter 'message' cannot be of java.lang.Byte.";
-            throw new IllegalArgumentException(errorMessage);
-        } else if (type.equals(Character.class)) {
-            String errorMessage = "The parameter 'message' cannot be of java.lang.Character.";
-            throw new IllegalArgumentException(errorMessage);
-        } else if (type.equals(Float.class)) {
-            String errorMessage = "The parameter 'message' cannot be of java.lang.Float.";
-            throw new IllegalArgumentException(errorMessage);
-        } else if (type.equals(Integer.class)) {
-            String errorMessage = "The parameter 'message' cannot be of java.lang.Integer.";
-            throw new IllegalArgumentException(errorMessage);
-        } else if (type.equals(Long.class)) {
-            String errorMessage = "The parameter 'message' cannot be of java.lang.Long.";
-            throw new IllegalArgumentException(errorMessage);
-        } else if (type.equals(Short.class)) {
-            String errorMessage = "The parameter 'message' cannot be of java.lang.Short.";
-            throw new IllegalArgumentException(errorMessage);
-        } else if (type.equals(Double.class)) {
-            String errorMessage = "The parameter 'message' cannot be of java.lang.Double.";
-            throw new IllegalArgumentException(errorMessage);
         }
 
         try {
@@ -79,13 +52,13 @@ public class JacksonMessageSerializer implements MessageSerializer {
     }
 
     @Override
-    public Object deserialize(String value) {
+    public Message deserialize(String value) {
         if (value == null) {
             throw new IllegalArgumentException("The parameter 'value' cannot be null.");
         }
 
         try {
-            return mapper.readValue(value, Object.class);
+            return (Message)mapper.readValue(value, Object.class);
         } catch (IOException e) {
             String errorMessage = "Could not deserialize message. See the cause for details.";
             throw new RuntimeException(errorMessage, e);

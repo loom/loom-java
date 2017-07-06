@@ -1,7 +1,7 @@
 package io.loom.core.messaging;
 
 public interface MessageSerializer {
-    String serialize(Object message);
+    String serialize(Message message);
 
-    Object deserialize(String value);
+    Message deserialize(String value);
 }

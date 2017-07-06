@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.ZonedDateTime;
 
-public class MessageWithZonedDateTimeProperty {
+public class MessageWithZonedDateTimeProperty implements Message {
     private ZonedDateTime dateTime;
 
     @JsonCreator

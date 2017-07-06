@@ -3,7 +3,7 @@ package io.loom.core.messaging;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-class ImmutableMessageWithJsonCreator {
+class ImmutableMessageWithJsonCreator implements Message {
     private final int intField;
     private final String stringField;
 

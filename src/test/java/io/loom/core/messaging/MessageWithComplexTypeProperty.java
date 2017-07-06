@@ -1,6 +1,6 @@
 package io.loom.core.messaging;
 
-public class MessageWithComplexTypeProperty {
+public class MessageWithComplexTypeProperty implements Message {
     private ComplexObject complexField;
 
     public ComplexObject getComplexProperty() {
