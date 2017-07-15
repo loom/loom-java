@@ -100,7 +100,7 @@ public class AbstractDomainEventSpecs {
     }
 
     @Test
-    public void raise_has_guard_clause_for_null_aggregateId() {
+    public void setHeaderProperties_has_guard_clause_for_null_aggregateId() {
         // Arrange
         VersionedEntity versionedEntity = Mockito.mock(VersionedEntity.class);
         Mockito.when(versionedEntity.getId()).thenReturn(null);
@@ -111,7 +111,7 @@ public class AbstractDomainEventSpecs {
         // Act
         IllegalArgumentException expected = null;
         try {
-            sut.raise(versionedEntity);
+            sut.setHeaderProperties(versionedEntity);
         } catch (IllegalArgumentException e) {
             expected = e;
         }
@@ -124,7 +124,7 @@ public class AbstractDomainEventSpecs {
     }
 
     @Test
-    public void raise_has_guard_clause_for_minimum_value_of_version() {
+    public void setHeaderProperties_has_guard_clause_for_minimum_value_of_version() {
         // Arrange
         VersionedEntity versionedEntity = Mockito.mock(VersionedEntity.class);
         Mockito.when(versionedEntity.getId()).thenReturn(UUID.randomUUID());
@@ -135,7 +135,7 @@ public class AbstractDomainEventSpecs {
         // Act
         IllegalArgumentException expected = null;
         try {
-            sut.raise(versionedEntity);
+            sut.setHeaderProperties(versionedEntity);
         } catch (IllegalArgumentException e) {
             expected = e;
         }
@@ -148,7 +148,7 @@ public class AbstractDomainEventSpecs {
     }
 
     @Test
-    public void raise_sets_header_properties_correctly() {
+    public void setHeaderProperties_sets_header_properties_correctly() {
         // Arrange
         UUID aggregateId = UUID.randomUUID();
         Random random = new Random();
@@ -160,7 +160,7 @@ public class AbstractDomainEventSpecs {
         IssueCreatedForTesting sut = new IssueCreatedForTesting();
 
         // Act
-        sut.raise(versionedEntity);
+        sut.setHeaderProperties(versionedEntity);
 
         // Assert
         Assert.assertEquals(aggregateId, sut.getAggregateId());
