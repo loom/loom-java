@@ -100,6 +100,27 @@ public class AbstractDomainEventSpecs {
     }
 
     @Test
+    public void setHeaderProperties_canSetHeaderProperties_false() {
+        // Arrange
+        VersionedEntity versionedEntity = Mockito.mock(VersionedEntity.class);
+        IssueCreatedForTesting sut = Mockito.spy(new IssueCreatedForTesting());
+        Mockito.when(sut.canSetHeaderProperties()).thenReturn(false);
+
+        // Act
+        IllegalStateException expected = null;
+        try {
+            sut.setHeaderProperties(versionedEntity);
+        } catch (IllegalStateException e) {
+            expected = e;
+        }
+
+        // Assert
+        Assert.assertNotNull(expected);
+        Assert.assertTrue(expected.getMessage()
+                .equals("The state of this instance can not be set to a header properties."));
+    }
+
+    @Test
     public void setHeaderProperties_has_guard_clause_for_null_aggregateId() {
         // Arrange
         VersionedEntity versionedEntity = Mockito.mock(VersionedEntity.class);

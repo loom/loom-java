@@ -22,6 +22,10 @@ public abstract class AbstractDomainEvent implements DomainEvent {
 
     @Override
     public void setHeaderProperties(VersionedEntity versionedEntity) {
+        if (!this.canSetHeaderProperties()) {
+            throw new IllegalStateException(
+                    "The state of this instance can not be set to a header properties.");
+        }
         UUID aggregateId = versionedEntity.getId();
         long version = versionedEntity.getVersion();
         ZonedDateTime occurrenceTime = ZonedDateTime.now();
