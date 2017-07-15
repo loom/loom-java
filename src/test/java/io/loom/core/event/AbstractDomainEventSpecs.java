@@ -171,4 +171,46 @@ public class AbstractDomainEventSpecs {
         Assert.assertTrue(after >= occurrenceTime);
         Assert.assertTrue(before <= occurrenceTime);
     }
+
+    @Test
+    public void canSetHeaderProperties_returns_true_constructor_no_args() {
+        // Arrange
+        IssueCreatedForTesting sut = new IssueCreatedForTesting();
+
+        // Act
+        boolean expected = sut.canSetHeaderProperties();
+
+        // Assert
+        Assert.assertTrue(expected);
+    }
+
+    @Test
+    public void canSetHeaderProperties_returns_false_constructor_all_header_properties_args() {
+        // Arrange
+        IssueCreatedForTesting sut = new IssueCreatedForTesting(
+                UUID.randomUUID(), 1L, ZonedDateTime.now());
+
+        // Act
+        boolean expected = sut.canSetHeaderProperties();
+
+        // Assert
+        Assert.assertFalse(expected);
+    }
+
+    @Test
+    public void canSetHeaderProperties_returns_false_after_set_header_properties() {
+        // Arrange
+        VersionedEntity versionedEntity = Mockito.mock(VersionedEntity.class);
+        Mockito.when(versionedEntity.getId()).thenReturn(UUID.randomUUID());
+        Mockito.when(versionedEntity.getVersion())
+                .thenReturn(new Random().nextInt(Integer.MAX_VALUE) + 1L);
+        IssueCreatedForTesting sut = new IssueCreatedForTesting();
+        sut.setHeaderProperties(versionedEntity);
+
+        // Act
+        boolean expected = sut.canSetHeaderProperties();
+
+        // Assert
+        Assert.assertFalse(expected);
+    }
 }

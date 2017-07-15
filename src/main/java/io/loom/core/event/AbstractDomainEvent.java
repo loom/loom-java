@@ -32,6 +32,13 @@ public abstract class AbstractDomainEvent implements DomainEvent {
     }
 
     @Override
+    public boolean canSetHeaderProperties() {
+        return this.aggregateId == null
+                && this.version == 0
+                && this.occurrenceTime == null;
+    }
+
+    @Override
     public final UUID getAggregateId() {
         return this.aggregateId;
     }
