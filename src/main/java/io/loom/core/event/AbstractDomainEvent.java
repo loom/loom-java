@@ -21,7 +21,7 @@ public abstract class AbstractDomainEvent implements DomainEvent {
     }
 
     @Override
-    public void raise(VersionedEntity versionedEntity) {
+    public void setHeaderProperties(VersionedEntity versionedEntity) {
         UUID aggregateId = versionedEntity.getId();
         long version = versionedEntity.getVersion();
         ZonedDateTime occurrenceTime = ZonedDateTime.now();

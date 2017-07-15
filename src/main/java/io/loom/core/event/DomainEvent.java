@@ -13,5 +13,5 @@ public interface DomainEvent extends Message {
 
     ZonedDateTime getOccurrenceTime();
 
-    void raise(VersionedEntity versionedEntity);
+    void setHeaderProperties(VersionedEntity versionedEntity);
 }
