@@ -100,6 +100,27 @@ public class AbstractDomainEventSpecs {
     }
 
     @Test
+    public void setHeaderProperties_canSetHeaderProperties_false() {
+        // Arrange
+        VersionedEntity versionedEntity = Mockito.mock(VersionedEntity.class);
+        IssueCreatedForTesting sut = Mockito.spy(new IssueCreatedForTesting());
+        Mockito.when(sut.canSetHeaderProperties()).thenReturn(false);
+
+        // Act
+        IllegalStateException expected = null;
+        try {
+            sut.setHeaderProperties(versionedEntity);
+        } catch (IllegalStateException e) {
+            expected = e;
+        }
+
+        // Assert
+        Assert.assertNotNull(expected);
+        Assert.assertTrue(expected.getMessage()
+                .equals("The state of this instance can not be set to a header properties."));
+    }
+
+    @Test
     public void setHeaderProperties_has_guard_clause_for_null_aggregateId() {
         // Arrange
         VersionedEntity versionedEntity = Mockito.mock(VersionedEntity.class);
@@ -170,5 +191,47 @@ public class AbstractDomainEventSpecs {
         long before = after - 1000;
         Assert.assertTrue(after >= occurrenceTime);
         Assert.assertTrue(before <= occurrenceTime);
+    }
+
+    @Test
+    public void canSetHeaderProperties_returns_true_constructor_no_args() {
+        // Arrange
+        IssueCreatedForTesting sut = new IssueCreatedForTesting();
+
+        // Act
+        boolean expected = sut.canSetHeaderProperties();
+
+        // Assert
+        Assert.assertTrue(expected);
+    }
+
+    @Test
+    public void canSetHeaderProperties_returns_false_constructor_all_header_properties_args() {
+        // Arrange
+        IssueCreatedForTesting sut = new IssueCreatedForTesting(
+                UUID.randomUUID(), 1L, ZonedDateTime.now());
+
+        // Act
+        boolean expected = sut.canSetHeaderProperties();
+
+        // Assert
+        Assert.assertFalse(expected);
+    }
+
+    @Test
+    public void canSetHeaderProperties_returns_false_after_set_header_properties() {
+        // Arrange
+        VersionedEntity versionedEntity = Mockito.mock(VersionedEntity.class);
+        Mockito.when(versionedEntity.getId()).thenReturn(UUID.randomUUID());
+        Mockito.when(versionedEntity.getVersion())
+                .thenReturn(new Random().nextInt(Integer.MAX_VALUE) + 1L);
+        IssueCreatedForTesting sut = new IssueCreatedForTesting();
+        sut.setHeaderProperties(versionedEntity);
+
+        // Act
+        boolean expected = sut.canSetHeaderProperties();
+
+        // Assert
+        Assert.assertFalse(expected);
     }
 }
