@@ -3,6 +3,7 @@ package io.loom.core.event;
 import io.loom.core.entity.VersionedEntity;
 
 import java.time.ZonedDateTime;
+import java.util.StringJoiner;
 import java.util.UUID;
 
 public abstract class AbstractDomainEvent implements DomainEvent {
@@ -21,14 +22,34 @@ public abstract class AbstractDomainEvent implements DomainEvent {
     }
 
     @Override
-    public void setHeaderProperties(VersionedEntity versionedEntity) {
+    public void onRaise(VersionedEntity versionedEntity) {
         UUID aggregateId = versionedEntity.getId();
         long version = versionedEntity.getVersion();
         ZonedDateTime occurrenceTime = ZonedDateTime.now();
         guardHeaderProperties(aggregateId, version, occurrenceTime);
-        this.aggregateId = aggregateId;
-        this.version = version;
-        this.occurrenceTime = occurrenceTime;
+        if (!this.isHeaderPropertiesInitialized()) {
+            this.aggregateId = aggregateId;
+            this.version = version;
+            this.occurrenceTime = occurrenceTime;
+        }
+        if (!aggregateId.equals(this.aggregateId)) {
+            String values = new StringJoiner(", ", "{", "}")
+                    .add("aggregateId: " + this.aggregateId)
+                    .add("version: " + this.version)
+                    .add("versionedEntity.getId(): " + aggregateId)
+                    .toString();
+            throw new IllegalArgumentException(
+                    "The target versionedEntity is not acceptable. " + values);
+        }
+        if (version != this.version) {
+            String values = new StringJoiner(", ", "{", "}")
+                    .add("aggregateId: " + this.aggregateId)
+                    .add("version: " + this.version)
+                    .add("versionedEntity.getVersion() " + version)
+                    .toString();
+            throw new IllegalArgumentException(
+                    "The target versionedEntity is not acceptable. " + values);
+        }
     }
 
     @Override
@@ -44,6 +65,12 @@ public abstract class AbstractDomainEvent implements DomainEvent {
     @Override
     public final ZonedDateTime getOccurrenceTime() {
         return this.occurrenceTime;
+    }
+
+    private boolean isHeaderPropertiesInitialized() {
+        return this.aggregateId != null
+                && this.version > 0
+                && this.occurrenceTime != null;
     }
 
     private static void guardHeaderProperties(
