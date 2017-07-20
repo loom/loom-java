@@ -100,7 +100,7 @@ public class AbstractDomainEventSpecs {
     }
 
     @Test
-    public void setHeaderProperties_has_guard_clause_for_null_aggregateId() {
+    public void onRaise_has_guard_clause_for_null_aggregateId() {
         // Arrange
         VersionedEntity versionedEntity = Mockito.mock(VersionedEntity.class);
         Mockito.when(versionedEntity.getId()).thenReturn(null);
@@ -111,7 +111,7 @@ public class AbstractDomainEventSpecs {
         // Act
         IllegalArgumentException expected = null;
         try {
-            sut.setHeaderProperties(versionedEntity);
+            sut.onRaise(versionedEntity);
         } catch (IllegalArgumentException e) {
             expected = e;
         }
@@ -124,7 +124,7 @@ public class AbstractDomainEventSpecs {
     }
 
     @Test
-    public void setHeaderProperties_has_guard_clause_for_minimum_value_of_version() {
+    public void onRaise_has_guard_clause_for_minimum_value_of_version() {
         // Arrange
         VersionedEntity versionedEntity = Mockito.mock(VersionedEntity.class);
         Mockito.when(versionedEntity.getId()).thenReturn(UUID.randomUUID());
@@ -135,7 +135,7 @@ public class AbstractDomainEventSpecs {
         // Act
         IllegalArgumentException expected = null;
         try {
-            sut.setHeaderProperties(versionedEntity);
+            sut.onRaise(versionedEntity);
         } catch (IllegalArgumentException e) {
             expected = e;
         }
@@ -148,7 +148,7 @@ public class AbstractDomainEventSpecs {
     }
 
     @Test
-    public void setHeaderProperties_sets_header_properties_correctly() {
+    public void onRaise_sets_header_properties_correctly() {
         // Arrange
         UUID aggregateId = UUID.randomUUID();
         Random random = new Random();
@@ -160,7 +160,7 @@ public class AbstractDomainEventSpecs {
         IssueCreatedForTesting sut = new IssueCreatedForTesting();
 
         // Act
-        sut.setHeaderProperties(versionedEntity);
+        sut.onRaise(versionedEntity);
 
         // Assert
         Assert.assertEquals(aggregateId, sut.getAggregateId());
@@ -170,5 +170,95 @@ public class AbstractDomainEventSpecs {
         long before = after - 1000;
         Assert.assertTrue(after >= occurrenceTime);
         Assert.assertTrue(before <= occurrenceTime);
+    }
+
+    @Test
+    public void onRaise_equals_entity() {
+        // Arrange
+        VersionedEntity versionedEntity = Mockito.mock(VersionedEntity.class);
+        Mockito.when(versionedEntity.getId()).thenReturn(UUID.randomUUID());
+        Mockito.when(versionedEntity.getVersion())
+                .thenReturn(new Random().nextInt(Integer.MAX_VALUE) + 1L);
+
+        ZonedDateTime occurrenceTime = ZonedDateTime.now();
+        IssueCreatedForTesting sut = new IssueCreatedForTesting(
+                versionedEntity.getId(), versionedEntity.getVersion(), occurrenceTime);
+
+        // Act
+        sut.onRaise(versionedEntity);
+
+        // Assert
+        Assert.assertEquals(versionedEntity.getId(), sut.getAggregateId());
+        Assert.assertEquals(versionedEntity.getVersion(), sut.getVersion());
+        Assert.assertEquals(occurrenceTime, sut.getOccurrenceTime());
+    }
+
+    @Test
+    public void onRaise_different_id_entity() {
+        // Arrange
+        UUID aggregateId = UUID.randomUUID();
+        Random random = new Random();
+        long version = random.nextInt(Integer.MAX_VALUE) + 1L;
+        ZonedDateTime occurrenceTime = ZonedDateTime.now();
+        IssueCreatedForTesting sut = new IssueCreatedForTesting(
+                aggregateId, version, occurrenceTime);
+
+        VersionedEntity otherVersionedEntity = Mockito.mock(VersionedEntity.class);
+        Mockito.when(otherVersionedEntity.getId()).thenReturn(UUID.randomUUID());
+        Mockito.when(otherVersionedEntity.getVersion()).thenReturn(version);
+
+        IllegalArgumentException expected = null;
+        try {
+            sut.onRaise(otherVersionedEntity);
+        } catch (IllegalArgumentException e) {
+            expected = e;
+        }
+
+        // Assert
+        Assert.assertNotNull(expected);
+        Assert.assertTrue(
+                "The error message should contain the value of the 'aggregateId'.",
+                expected.getMessage().contains(sut.getAggregateId().toString()));
+        Assert.assertTrue(
+                "The error message should contain the value of the 'version'.",
+                expected.getMessage().contains(String.valueOf(sut.getVersion())));
+        Assert.assertTrue(
+                "The error message should contain the value of other versionedEntity 'id'.",
+                expected.getMessage().contains(otherVersionedEntity.getId().toString()));
+    }
+
+    @Test
+    public void onRaise_different_version_entity() {
+        // Arrange
+        UUID aggregateId = UUID.randomUUID();
+        Random random = new Random();
+        long version = random.nextInt(Integer.MAX_VALUE) + 1L;
+        ZonedDateTime occurrenceTime = ZonedDateTime.now();
+        IssueCreatedForTesting sut = new IssueCreatedForTesting(
+                aggregateId, version, occurrenceTime);
+
+        VersionedEntity otherVersionedEntity = Mockito.mock(VersionedEntity.class);
+        Mockito.when(otherVersionedEntity.getId()).thenReturn(aggregateId);
+        Mockito.when(otherVersionedEntity.getVersion())
+                .thenReturn(version + random.nextInt(100) + 1L);
+
+        IllegalArgumentException expected = null;
+        try {
+            sut.onRaise(otherVersionedEntity);
+        } catch (IllegalArgumentException e) {
+            expected = e;
+        }
+
+        // Assert
+        Assert.assertNotNull(expected);
+        Assert.assertTrue(
+                "The error message should contain the value of the 'aggregateId'.",
+                expected.getMessage().contains(sut.getAggregateId().toString()));
+        Assert.assertTrue(
+                "The error message should contain the value of the 'version'.",
+                expected.getMessage().contains(String.valueOf(sut.getVersion())));
+        Assert.assertTrue(
+                "The error message should contain the value of other versionedEntity 'version'.",
+                expected.getMessage().contains(String.valueOf(otherVersionedEntity.getVersion())));
     }
 }
