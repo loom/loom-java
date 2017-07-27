@@ -128,7 +128,7 @@ public class AbstractDomainEventSpecs {
         // Arrange
         VersionedEntity versionedEntity = Mockito.mock(VersionedEntity.class);
         Mockito.when(versionedEntity.getId()).thenReturn(UUID.randomUUID());
-        Mockito.when(versionedEntity.getVersion()).thenReturn(0L);
+        Mockito.when(versionedEntity.getVersion()).thenReturn(-1L);
 
         IssueCreatedForTesting sut = new IssueCreatedForTesting();
 
@@ -164,7 +164,7 @@ public class AbstractDomainEventSpecs {
 
         // Assert
         Assert.assertEquals(aggregateId, sut.getAggregateId());
-        Assert.assertEquals(version, sut.getVersion());
+        Assert.assertEquals(version + 1, sut.getVersion());
         long occurrenceTime = sut.getOccurrenceTime().toInstant().toEpochMilli();
         long after = ZonedDateTime.now().toInstant().toEpochMilli();
         long before = after - 1000;
@@ -182,14 +182,14 @@ public class AbstractDomainEventSpecs {
 
         ZonedDateTime occurrenceTime = ZonedDateTime.now();
         IssueCreatedForTesting sut = new IssueCreatedForTesting(
-                versionedEntity.getId(), versionedEntity.getVersion(), occurrenceTime);
+                versionedEntity.getId(), versionedEntity.getVersion() + 1, occurrenceTime);
 
         // Act
         sut.onRaise(versionedEntity);
 
         // Assert
         Assert.assertEquals(versionedEntity.getId(), sut.getAggregateId());
-        Assert.assertEquals(versionedEntity.getVersion(), sut.getVersion());
+        Assert.assertEquals(versionedEntity.getVersion() + 1, sut.getVersion());
         Assert.assertEquals(occurrenceTime, sut.getOccurrenceTime());
     }
 
@@ -258,7 +258,9 @@ public class AbstractDomainEventSpecs {
                 "The error message should contain the value of the 'version'.",
                 expected.getMessage().contains(String.valueOf(sut.getVersion())));
         Assert.assertTrue(
-                "The error message should contain the value of other versionedEntity 'version'.",
-                expected.getMessage().contains(String.valueOf(otherVersionedEntity.getVersion())));
+                "The error message should contain the value of other "
+                         + "'versionedEntity.getVersion() + 1'.",
+                expected.getMessage().contains(
+                        String.valueOf(otherVersionedEntity.getVersion() + 1)));
     }
 }

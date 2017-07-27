@@ -24,7 +24,7 @@ public abstract class AbstractDomainEvent implements DomainEvent {
     @Override
     public void onRaise(VersionedEntity versionedEntity) {
         UUID aggregateId = versionedEntity.getId();
-        long version = versionedEntity.getVersion();
+        long version = versionedEntity.getVersion() + 1;
         ZonedDateTime occurrenceTime = ZonedDateTime.now();
         guardHeaderProperties(aggregateId, version, occurrenceTime);
         if (!this.isHeaderPropertiesInitialized()) {
@@ -45,7 +45,7 @@ public abstract class AbstractDomainEvent implements DomainEvent {
             String values = new StringJoiner(", ", "{", "}")
                     .add("aggregateId: " + this.aggregateId)
                     .add("version: " + this.version)
-                    .add("versionedEntity.getVersion() " + version)
+                    .add("versionedEntity.getVersion() + 1: " + version)
                     .toString();
             throw new IllegalArgumentException(
                     "The target versionedEntity is not acceptable. " + values);
