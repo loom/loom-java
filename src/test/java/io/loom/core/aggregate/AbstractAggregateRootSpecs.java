@@ -4,7 +4,10 @@ import io.loom.core.event.AbstractDomainEvent;
 import io.loom.core.event.DomainEvent;
 
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -133,7 +136,7 @@ public class AbstractAggregateRootSpecs {
         // Arrange
         AggregateRootProxy sut = new AggregateRootProxy(UUID.randomUUID());
         AbstractDomainEvent domainEvent = Mockito.spy(AbstractDomainEvent.class);
-        ZonedDateTime lowerBoundOfOccurrenceTime = ZonedDateTime.now();
+        final ZonedDateTime lowerBoundOfOccurrenceTime = ZonedDateTime.now();
 
         // Act
         sut.raise(domainEvent);
@@ -145,7 +148,8 @@ public class AbstractAggregateRootSpecs {
         Assert.assertEquals(domainEvent, actual.get(0));
         Assert.assertEquals(1, actual.get(0).getVersion());
         Assert.assertEquals(sut.getId(), actual.get(0).getAggregateId());
-        Assert.assertTrue(lowerBoundOfOccurrenceTime.compareTo(actual.get(0).getOccurrenceTime()) <= 0);
+        Assert.assertTrue(
+                lowerBoundOfOccurrenceTime.compareTo(actual.get(0).getOccurrenceTime()) <= 0);
         Assert.assertTrue(ZonedDateTime.now().compareTo(actual.get(0).getOccurrenceTime()) >= 0);
     }
 
@@ -162,7 +166,7 @@ public class AbstractAggregateRootSpecs {
         AggregateRootProxy sut = new AggregateRootProxy(UUID.randomUUID());
         sut.raise(Mockito.spy(AbstractDomainEvent.class));
         AbstractDomainEvent domainEvent = Mockito.spy(AbstractDomainEvent.class);
-        ZonedDateTime lowerBoundOfOccurrenceTime = ZonedDateTime.now();
+        final ZonedDateTime lowerBoundOfOccurrenceTime = ZonedDateTime.now();
 
         // Act
         sut.raise(domainEvent);
@@ -174,7 +178,8 @@ public class AbstractAggregateRootSpecs {
         Assert.assertEquals(domainEvent, actual.get(1));
         Assert.assertEquals(2, actual.get(1).getVersion());
         Assert.assertEquals(sut.getId(), actual.get(1).getAggregateId());
-        Assert.assertTrue(lowerBoundOfOccurrenceTime.compareTo(actual.get(1).getOccurrenceTime()) <= 0);
+        Assert.assertTrue(
+                lowerBoundOfOccurrenceTime.compareTo(actual.get(1).getOccurrenceTime()) <= 0);
         Assert.assertTrue(ZonedDateTime.now().compareTo(actual.get(1).getOccurrenceTime()) >= 0);
     }
 
@@ -187,8 +192,7 @@ public class AbstractAggregateRootSpecs {
         // Act
         try {
             sut.raise(null);
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             thrown = exception;
         }
 
