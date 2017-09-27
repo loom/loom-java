@@ -14,7 +14,7 @@ public abstract class AbstractAggregateRoot implements AggregateRoot {
 
     protected AbstractAggregateRoot(UUID id) {
         if (id == null) {
-            throw new IllegalArgumentException("The parameter 'id' cannot be null.");
+            throw new IllegalArgumentException("The argument 'id' cannot be null.");
         }
 
         this.id = id;
