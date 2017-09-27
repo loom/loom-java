@@ -48,10 +48,18 @@ public abstract class AbstractAggregateRoot implements AggregateRoot {
             throw new IllegalArgumentException("The argument 'domainEvent' cannot be null. ");
         }
 
-        domainEvent.onRaise(this);
-        this.pendingEvents.add(domainEvent);
-        this.version++;
+        raiseAndAppend(domainEvent);
+        increaseVersion();
 
         // TODO: 이벤트 처리기 실행 논리를 구현합니다.
+    }
+
+    private void raiseAndAppend(DomainEvent domainEvent) {
+        domainEvent.onRaise(this);
+        this.pendingEvents.add(domainEvent);
+    }
+
+    private void increaseVersion() {
+        this.version++;
     }
 }
