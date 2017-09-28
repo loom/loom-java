@@ -8,18 +8,17 @@ import java.util.List;
 import java.util.UUID;
 
 public abstract class AbstractAggregateRoot implements AggregateRoot {
-    // Test 를 위해 package-public 으로 합니다.
-    // TODO: raise method 가 구현될 때 private 으로 전환 합니다.
-    final List<DomainEvent> pendingEvents = new ArrayList<>();
-
     private final UUID id;
+    private final List<DomainEvent> pendingEvents = new ArrayList<>();
+    private long version;
 
     protected AbstractAggregateRoot(UUID id) {
         if (id == null) {
-            throw new IllegalArgumentException("The parameter 'id' cannot be null.");
+            throw new IllegalArgumentException("The argument 'id' cannot be null.");
         }
 
         this.id = id;
+        this.version = 0;
     }
 
     @Override
@@ -29,7 +28,7 @@ public abstract class AbstractAggregateRoot implements AggregateRoot {
 
     @Override
     public final long getVersion() {
-        return 0;
+        return this.version;
     }
 
     @Override
@@ -42,5 +41,25 @@ public abstract class AbstractAggregateRoot implements AggregateRoot {
         events = Collections.unmodifiableList(events);
         this.pendingEvents.clear();
         return events;
+    }
+
+    protected void raise(DomainEvent domainEvent) {
+        if (domainEvent == null) {
+            throw new IllegalArgumentException("The argument 'domainEvent' cannot be null. ");
+        }
+
+        raiseAndAppend(domainEvent);
+        increaseVersion();
+
+        // TODO: 이벤트 처리기 실행 논리를 구현합니다.
+    }
+
+    private void raiseAndAppend(DomainEvent domainEvent) {
+        domainEvent.onRaise(this);
+        this.pendingEvents.add(domainEvent);
+    }
+
+    private void increaseVersion() {
+        this.version++;
     }
 }
