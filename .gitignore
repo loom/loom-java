@@ -1,13 +1,9 @@
+.vscode
 .gradle
-/build/
-*.log
-/out/
-
-### IntelliJ IDEA ###
+.settings
+.classpath
+.project
+build
+bin
+out
 .idea
-*.iws
-*.iml
-*.ipr%
-
-### OS X ###
-.DS_Store

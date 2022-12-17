@@ -1,41 +1,35 @@
-group 'io.loom-core'
-version '0.0.1-SNAPSHOT'
-
-apply plugin: 'java'
-apply plugin: 'checkstyle'
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
+plugins {
+    id 'java'
+    id 'org.ec4j.editorconfig' version '0.0.3'
+    id 'checkstyle'
 }
 
-dependencies {
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.8'
-    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.8.8'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.8.8'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+allprojects {
+    repositories {
+        mavenCentral()
+    }
 }
 
-checkstyle {
-    toolVersion = '7.7'
-}
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.ec4j.editorconfig'
+    apply plugin: 'checkstyle'
 
-/**
- * ignoreFailures = false 설정만으로 checkstyle 위배 시 빌드가 실패해야 하지만
- * 다음과 같은 버그가 있습니다.
- * https://github.com/gradle/gradle/issues/881
- *
- * 이 구성은 버그가 해결될 때 까지 사용되는 임시방편입니다.
- * */
-tasks.withType(Checkstyle).each { checkstyleTask ->
-    checkstyleTask.doLast {
-        reports.all { report ->
-            def outputFile = report.destination
-            if (outputFile.exists() && outputFile.text.contains("<error ")) {
-                throw new GradleException("There were checkstyle warnings! For more info check $outputFile")
-            }
-        }
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    editorconfig {
+        excludes = ["build"]
+    }
+
+    check.dependsOn editorconfigCheck
+
+    checkstyle {
+        configFile = file("${project.rootDir}/config/checkstyle/checkstyle.xml")
+        configProperties = ["suppressionFile": "${project.rootDir}/config/checkstyle/checkstyle-suppressions.xml"]
+        toolVersion = "8.40"
+        ignoreFailures = false
+        maxErrors = 0
+        maxWarnings = 0
     }
 }
