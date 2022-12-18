@@ -1,3 +1,4 @@
 rootProject.name = 'loom'
 
+include 'loom.eventsourcing.contract'
 include 'loom.unittest'

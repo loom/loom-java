@@ -41,8 +41,7 @@
     </module>
     <!-- https://checkstyle.org/config_filters.html#SuppressionFilter -->
     <module name="SuppressionFilter">
-        <property name="file" value="${org.checkstyle.google.suppressionfilter.config}"
-                  default="checkstyle-suppressions.xml" />
+        <property name="file" value="config/checkstyle/checkstyle-suppressions.xml"/>
         <property name="optional" value="true"/>
     </module>
 
@@ -188,6 +187,7 @@
                      value="Package name ''{0}'' must match pattern ''{1}''."/>
         </module>
         <module name="TypeName">
+            <property name="id" value="TypeName"/>
             <property name="tokens" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF,
                     ANNOTATION_DEF, RECORD_DEF"/>
             <message key="name.invalidPattern"
