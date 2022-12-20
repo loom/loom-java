@@ -1,4 +1,4 @@
-package loom;
+package loom.eventsourcing;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;

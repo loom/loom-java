@@ -1,4 +1,4 @@
-package loom;
+package loom.eventsourcing;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

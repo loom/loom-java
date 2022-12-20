@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.beans.ConstructorProperties;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
+import loom.eventsourcing.StreamCommand;
+import loom.eventsourcing.StreamEvent;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
