@@ -1,4 +1,4 @@
-package loom;
+package test.loom;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
