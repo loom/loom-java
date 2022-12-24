@@ -6,18 +6,9 @@ import autoparams.AutoSource;
 import java.lang.reflect.Type;
 import java.util.Optional;
 import loom.json.ClassNameTypeStrategy;
-import loom.json.TypeStrategy;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 
 class ClassNameTypeStrategy_specs {
-
-    @Test
-    void sut_implements_TypeStrategy() {
-        Class<?> sut = ClassNameTypeStrategy.class;
-        Class<?>[] interfaces = sut.getInterfaces();
-        assertThat(interfaces).contains(TypeStrategy.class);
-    }
 
     @ParameterizedTest
     @AutoSource
