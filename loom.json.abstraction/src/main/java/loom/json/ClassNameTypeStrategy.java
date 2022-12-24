@@ -6,8 +6,8 @@ import java.util.Optional;
 public final class ClassNameTypeStrategy implements TypeStrategy {
 
     @Override
-    public String formatType(Object value) {
-        return value.getClass().getName();
+    public Optional<String> tryFormatType(Object value) {
+        return Optional.of(value.getClass().getName());
     }
 
     @Override

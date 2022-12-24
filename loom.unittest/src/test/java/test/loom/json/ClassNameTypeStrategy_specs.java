@@ -21,12 +21,12 @@ class ClassNameTypeStrategy_specs {
 
     @ParameterizedTest
     @AutoSource
-    void formatType_returns_class_name(
+    void tryFormatType_returns_class_name(
         ClassNameTypeStrategy sut,
         String value
     ) {
-        String actual = sut.formatType(value);
-        assertThat(actual).isEqualTo("java.lang.String");
+        Optional<String> actual = sut.tryFormatType(value);
+        assertThat(actual).containsSame("java.lang.String");
     }
 
     @ParameterizedTest

@@ -17,8 +17,8 @@ public class DelegatingTypeStrategy implements TypeStrategy {
     }
 
     @Override
-    public String formatType(Object value) {
-        return typeFormatter.formatType(value);
+    public Optional<String> tryFormatType(Object value) {
+        return typeFormatter.tryFormatType(value);
     }
 
     @Override

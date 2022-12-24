@@ -21,18 +21,18 @@ class DelegatingTypeStrategy_specs {
 
     @ParameterizedTest
     @AutoSource
-    void formatType_correctly_relays(
+    void tryFormatType_correctly_relays(
         Object value,
         String correctAnswer,
         String wrongAnswer
     ) {
         DelegatingTypeStrategy sut = new DelegatingTypeStrategy(
-            x -> x == value ? correctAnswer : wrongAnswer,
+            x -> Optional.of(x == value ? correctAnswer : wrongAnswer),
             x -> Optional.empty());
 
-        String actual = sut.formatType(value);
+        Optional<String> actual = sut.tryFormatType(value);
 
-        assertThat(actual).isEqualTo(correctAnswer);
+        assertThat(actual).containsSame(correctAnswer);
     }
 
     @ParameterizedTest
@@ -40,7 +40,7 @@ class DelegatingTypeStrategy_specs {
     void tryResolveType_correctly_relays(String formattedType) {
         Optional<Type> answer = Optional.of(UserCreated.class);
         DelegatingTypeStrategy sut = new DelegatingTypeStrategy(
-            x -> x.getClass().getName(),
+            x -> Optional.of(x.getClass().getName()),
             x -> x.equals(formattedType) ? answer : Optional.empty());
 
         Optional<Type> actual = sut.tryResolveType(formattedType);

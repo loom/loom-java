@@ -1,7 +1,9 @@
 package loom.json;
 
+import java.util.Optional;
+
 @FunctionalInterface
 public interface TypeFormatter {
 
-    String formatType(Object value);
+    Optional<String> tryFormatType(Object value);
 }
