@@ -26,7 +26,7 @@ class TypeFormatter_specs {
     ) {
         TypeFormatter sut = x -> Optional.ofNullable(x == value ? null : some);
         assertThatThrownBy(() -> sut.formatType(value))
-            .hasMessageStartingWith("Cannot format type")
-            .hasMessageContaining(UserCreated.class.getName());
+            .isInstanceOf(RuntimeException.class)
+            .hasMessage("Unable to format type: test.loom.json.UserCreated");
     }
 }

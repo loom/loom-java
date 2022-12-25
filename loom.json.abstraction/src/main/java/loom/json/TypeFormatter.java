@@ -9,7 +9,7 @@ public interface TypeFormatter {
 
     default String formatType(Object value) {
         return tryFormatType(value).orElseThrow(() -> {
-            String message = "Cannot format type '" + value.getClass().getName() + "'.";
+            String message = "Unable to format type: " + value.getClass().getName();
             return new RuntimeException(message);
         });
     }
