@@ -1,0 +1,15 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+test {
+    dependsOn('editorconfigCheck', 'checkstyleMain')
+}

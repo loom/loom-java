@@ -2,6 +2,7 @@ rootProject.name = 'loom'
 
 include 'loom.json.abstraction'
 include 'loom.json.jackson'
+include 'loom.messaging.contract'
 include 'loom.eventsourcing.contract'
 include 'loom.eventsourcing.json'
 include 'loom.unittest'
