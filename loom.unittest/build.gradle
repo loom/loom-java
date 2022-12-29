@@ -13,6 +13,7 @@ dependencies {
     testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.0'
     testImplementation(project(':loom.json.abstraction'))
     testImplementation(project(':loom.json.jackson'))
+    testImplementation(project(':loom.messaging.abstraction'))
     testImplementation(project(':loom.eventsourcing.contract'))
     testImplementation(project(':loom.eventsourcing.json'))
 }
