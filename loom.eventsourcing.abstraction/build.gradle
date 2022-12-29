@@ -1,0 +1,16 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    api(project(':loom.eventsourcing.contract'))
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+test {
+    dependsOn('editorconfigCheck', 'checkstyleMain')
+}
