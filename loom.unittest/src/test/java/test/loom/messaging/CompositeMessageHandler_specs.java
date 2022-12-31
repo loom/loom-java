@@ -9,7 +9,6 @@ import java.util.List;
 import loom.messaging.CompositeMessageHandler;
 import loom.messaging.Message;
 import loom.messaging.MessageHandler;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 
 public class CompositeMessageHandler_specs {

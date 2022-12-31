@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.util.Optional;
 import loom.json.DelegatingTypeStrategy;
 import org.junit.jupiter.params.ParameterizedTest;
+import test.loom.UserCreated;
 
 class DelegatingTypeStrategy_specs {
 

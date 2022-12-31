@@ -13,6 +13,7 @@ import loom.json.JacksonJsonStrategy;
 import loom.json.JsonStrategy;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import test.loom.UserCreated;
 
 class JacksonJsonStrategy_specs {
 

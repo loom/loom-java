@@ -15,6 +15,7 @@ dependencies {
     testImplementation(project(':loom.json.jackson'))
     testImplementation(project(':loom.messaging.abstraction'))
     testImplementation(project(':loom.eventsourcing.contract'))
+    testImplementation(project(':loom.eventsourcing.abstraction'))
     testImplementation(project(':loom.eventsourcing.json'))
 }
 

@@ -11,6 +11,8 @@ import loom.eventsourcing.StreamEvent;
 import loom.json.ClassNameTypeStrategy;
 import loom.json.EventSourcingTypeStrategy;
 import org.junit.jupiter.params.ParameterizedTest;
+import test.loom.CreateUser;
+import test.loom.UserCreated;
 
 class EventSourcingTypeStrategy_specs {
 
@@ -25,7 +27,7 @@ class EventSourcingTypeStrategy_specs {
 
         Optional<String> actual = sut.tryFormatType(command);
 
-        assertThat(actual).contains("stream-command:test.loom.json.CreateUser");
+        assertThat(actual).contains("stream-command:test.loom.CreateUser");
     }
 
     @ParameterizedTest
@@ -39,7 +41,7 @@ class EventSourcingTypeStrategy_specs {
 
         Optional<String> actual = sut.tryFormatType(event);
 
-        assertThat(actual).contains("stream-event:test.loom.json.UserCreated");
+        assertThat(actual).contains("stream-event:test.loom.UserCreated");
     }
 
     @ParameterizedTest
@@ -64,7 +66,7 @@ class EventSourcingTypeStrategy_specs {
         // Arrange
         EventSourcingTypeStrategy sut =
             new EventSourcingTypeStrategy(payloadStrategy);
-        String formattedType = "stream-command:test.loom.json.CreateUser";
+        String formattedType = "stream-command:test.loom.CreateUser";
 
         // Act
         Optional<Type> actual = sut.tryResolveType(formattedType);
@@ -91,7 +93,7 @@ class EventSourcingTypeStrategy_specs {
         // Arrange
         EventSourcingTypeStrategy sut =
             new EventSourcingTypeStrategy(payloadStrategy);
-        String formattedType = "stream-event:test.loom.json.UserCreated";
+        String formattedType = "stream-event:test.loom.UserCreated";
 
         // Act
         Optional<Type> actual = sut.tryResolveType(formattedType);

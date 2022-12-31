@@ -7,6 +7,7 @@ import autoparams.AutoSource;
 import java.util.Optional;
 import loom.json.TypeFormatter;
 import org.junit.jupiter.params.ParameterizedTest;
+import test.loom.UserCreated;
 
 class TypeFormatter_specs {
 
@@ -27,6 +28,6 @@ class TypeFormatter_specs {
         TypeFormatter sut = x -> Optional.ofNullable(x == value ? null : some);
         assertThatThrownBy(() -> sut.formatType(value))
             .isInstanceOf(RuntimeException.class)
-            .hasMessage("Unable to format type: test.loom.json.UserCreated");
+            .hasMessage("Unable to format type: test.loom.UserCreated");
     }
 }
