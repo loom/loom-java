@@ -11,17 +11,20 @@ import java.util.stream.StreamSupport;
 
 public class Rehydrator<S> {
 
-    private final Supplier<S> seedFactory;
+    private final Class<S> stateType;
     private final EventReader eventReader;
+    private final Supplier<S> seedFactory;
     private final List<EventHandler<S, ?>> eventHandlers;
 
     public Rehydrator(
-        Supplier<S> seedFactory,
+        Class<S> stateType,
         EventReader eventReader,
+        Supplier<S> seedFactory,
         Iterable<EventHandler<S, ?>> eventHandlers
     ) {
-        this.seedFactory = seedFactory;
+        this.stateType = stateType;
         this.eventReader = eventReader;
+        this.seedFactory = seedFactory;
         this.eventHandlers = toUnmodifiableList(eventHandlers);
     }
 
@@ -37,7 +40,7 @@ public class Rehydrator<S> {
         return foldl(
             this::handleEvent,
             new Snapshot<S>(streamId, 0, seedFactory.get()),
-            stream(eventReader.queryEvents(streamId, 1)));
+            stream(eventReader.queryEvents(stateType, streamId, 1)));
     }
 
     private static <T, U> U foldl(BiFunction<U, T, U> f, U z, Stream<T> xs) {

@@ -22,8 +22,8 @@ class Rehydrator_specs {
         PasswordHashChanged passwordHashChanged
     ) {
         // Arrange
-        eventReader.addEvent(streamId, userCreated);
-        eventReader.addEvent(streamId, passwordHashChanged);
+        eventReader.addEvent(User.class, streamId, userCreated);
+        eventReader.addEvent(User.class, streamId, passwordHashChanged);
         UserRehydrator sut = new UserRehydrator(eventReader);
 
         // Act
@@ -48,9 +48,9 @@ class Rehydrator_specs {
         PasswordHashChanged passwordHashChanged
     ) {
         // Arrange
-        eventReader.addEvent(streamId, userCreated);
-        eventReader.addEvent(streamId, unknownEvent);
-        eventReader.addEvent(streamId, passwordHashChanged);
+        eventReader.addEvent(User.class, streamId, userCreated);
+        eventReader.addEvent(User.class, streamId, unknownEvent);
+        eventReader.addEvent(User.class, streamId, passwordHashChanged);
         UserRehydrator sut = new UserRehydrator(eventReader);
 
         // Act/Assert

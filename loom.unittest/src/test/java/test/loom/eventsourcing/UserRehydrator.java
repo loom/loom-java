@@ -9,8 +9,9 @@ public class UserRehydrator extends Rehydrator<User> {
 
     public UserRehydrator(EventReader eventReader) {
         super(
-            () -> User.builder().build(),
+            User.class,
             eventReader,
+            () -> User.builder().build(),
             Arrays.asList(
                 new UserCreatedEventHandler(),
                 new PasswordHashChangedEventHandler()
