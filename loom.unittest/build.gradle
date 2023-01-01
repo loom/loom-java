@@ -11,6 +11,7 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.23.1'
     testImplementation 'io.github.autoparams:autoparams:1.1.1'
     testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.0'
+    testImplementation(project(':loom.type'))
     testImplementation(project(':loom.json.abstraction'))
     testImplementation(project(':loom.json.jackson'))
     testImplementation(project(':loom.messaging.abstraction'))

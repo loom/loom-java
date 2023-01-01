@@ -1,5 +1,6 @@
 rootProject.name = 'loom'
 
+include 'loom.type'
 include 'loom.json.abstraction'
 include 'loom.json.jackson'
 include 'loom.messaging.contract'

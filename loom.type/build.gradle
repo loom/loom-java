@@ -3,7 +3,6 @@ plugins {
 }
 
 dependencies {
-    api(project(':loom.type'))
 }
 
 java {
