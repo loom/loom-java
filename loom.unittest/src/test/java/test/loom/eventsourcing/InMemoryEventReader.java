@@ -39,18 +39,14 @@ public class InMemoryEventReader implements EventReader {
     }
 
     public void addEvent(Type stateType, String streamId, Object event) {
-        Map<String, List<Object>> streams = eventStore.get(stateType);
-        if (streams == null) {
-            streams = new ConcurrentHashMap<>();
-            eventStore.put(stateType, streams);
-        }
+        Map<String, List<Object>> streams = eventStore.computeIfAbsent(
+            stateType,
+            k -> new ConcurrentHashMap<>());
 
-        List<Object> storedEvents = streams.get(streamId);
-        if (storedEvents == null) {
-            storedEvents = new ArrayList<>();
-            streams.put(streamId, storedEvents);
-        }
+        List<Object> stream = streams.computeIfAbsent(
+            streamId,
+            k -> new ArrayList<>());
 
-        storedEvents.add(event);
+        stream.add(event);
     }
 }

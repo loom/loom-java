@@ -180,8 +180,8 @@ public class CompositeMessageHandler_specs {
 
     public static class MessageHandlerDouble implements MessageHandler {
 
-        private boolean canHandleResult;
-        private List<Message> handledMessages;
+        private final boolean canHandleResult;
+        private final List<Message> handledMessages;
 
         public MessageHandlerDouble(boolean canHandleResult) {
             this.canHandleResult = canHandleResult;

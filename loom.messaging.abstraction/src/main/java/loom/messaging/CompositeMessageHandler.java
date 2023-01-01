@@ -23,6 +23,7 @@ public final class CompositeMessageHandler implements MessageHandler {
         return false;
     }
 
+    @SuppressWarnings("PointlessBooleanExpression")
     @Override
     public void handle(Message message) {
         List<Throwable> errors = handleMessageCatchingErrors(message);
