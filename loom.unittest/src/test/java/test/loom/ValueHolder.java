@@ -1,4 +1,4 @@
-package test.loom.json;
+package test.loom;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

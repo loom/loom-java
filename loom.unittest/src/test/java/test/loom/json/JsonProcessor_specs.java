@@ -4,10 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import autoparams.AutoSource;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import loom.json.ClassNameTypeStrategy;
 import loom.json.JacksonJsonStrategy;
 import loom.json.JsonData;
 import loom.json.JsonProcessor;
+import loom.type.ClassNameTypeStrategy;
 import org.junit.jupiter.params.ParameterizedTest;
 
 class JsonProcessor_specs {

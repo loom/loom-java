@@ -1,4 +1,4 @@
-package loom.json;
+package loom.type;
 
 import java.util.Optional;
 

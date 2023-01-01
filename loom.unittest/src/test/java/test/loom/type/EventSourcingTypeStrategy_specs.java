@@ -1,4 +1,4 @@
-package test.loom.json;
+package test.loom.type;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,8 +8,8 @@ import java.lang.reflect.Type;
 import java.util.Optional;
 import loom.eventsourcing.StreamCommand;
 import loom.eventsourcing.StreamEvent;
-import loom.json.ClassNameTypeStrategy;
-import loom.json.EventSourcingTypeStrategy;
+import loom.type.ClassNameTypeStrategy;
+import loom.type.EventSourcingTypeStrategy;
 import org.junit.jupiter.params.ParameterizedTest;
 import test.loom.CreateUser;
 import test.loom.UserCreated;

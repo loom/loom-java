@@ -1,4 +1,4 @@
-package test.loom.json;
+package test.loom.type;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import autoparams.AutoSource;
 import java.lang.reflect.Type;
 import java.util.Optional;
-import loom.json.TypeResolver;
+import loom.type.TypeResolver;
 import org.junit.jupiter.params.ParameterizedTest;
 
 class TypeResolver_specs {

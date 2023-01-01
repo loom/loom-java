@@ -1,6 +1,7 @@
 package loom.json;
 
 import java.lang.reflect.Type;
+import loom.type.TypeStrategy;
 
 public final class JsonProcessor {
 

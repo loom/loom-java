@@ -1,11 +1,11 @@
-package test.loom.json;
+package test.loom.type;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import autoparams.AutoSource;
 import java.lang.reflect.Type;
 import java.util.Optional;
-import loom.json.DelegatingTypeStrategy;
+import loom.type.DelegatingTypeStrategy;
 import org.junit.jupiter.params.ParameterizedTest;
 import test.loom.UserCreated;
 

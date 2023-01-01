@@ -14,6 +14,7 @@ import loom.json.JsonStrategy;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import test.loom.UserCreated;
+import test.loom.ValueHolder;
 
 class JacksonJsonStrategy_specs {
 
