@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     api(project(':loom.eventsourcing.contract'))
-    api(project(':loom.json.abstraction'))
+    api(project(':loom.type'))
 }
 
 java {

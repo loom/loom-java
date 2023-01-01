@@ -17,7 +17,7 @@ dependencies {
     testImplementation(project(':loom.messaging.abstraction'))
     testImplementation(project(':loom.eventsourcing.contract'))
     testImplementation(project(':loom.eventsourcing.abstraction'))
-    testImplementation(project(':loom.eventsourcing.json'))
+    testImplementation(project(':loom.eventsourcing.type'))
 }
 
 java {
