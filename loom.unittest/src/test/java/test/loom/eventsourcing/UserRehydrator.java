@@ -11,7 +11,7 @@ public class UserRehydrator extends Rehydrator<User> {
         super(
             User.class,
             eventReader,
-            () -> User.builder().build(),
+            User::seedFactory,
             Arrays.asList(
                 new UserCreatedEventHandler(),
                 new PasswordHashChangedEventHandler()

@@ -1,11 +1,11 @@
 package loom.eventsourcing;
 
-import java.lang.reflect.ParameterizedType;
+import static java.util.stream.Collectors.toMap;
+
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -14,7 +14,7 @@ public class Rehydrator<S> {
     private final Class<S> stateType;
     private final EventReader eventReader;
     private final Supplier<S> seedFactory;
-    private final List<EventHandler<S, ?>> eventHandlers;
+    private final Map<Class<?>, EventHandler<S, Object>> eventHandlers;
 
     public Rehydrator(
         Class<S> stateType,
@@ -25,15 +25,20 @@ public class Rehydrator<S> {
         this.stateType = stateType;
         this.eventReader = eventReader;
         this.seedFactory = seedFactory;
-        this.eventHandlers = toUnmodifiableList(eventHandlers);
+        this.eventHandlers = buildDictionary(eventHandlers);
     }
 
-    private static <E> List<E> toUnmodifiableList(Iterable<E> eventHandlers) {
-        return stream(eventHandlers).collect(Collectors.toList());
+    private static <E> Stream<E> stream(Iterable<E> source) {
+        return StreamSupport.stream(source.spliterator(), false);
     }
 
-    private static <E> Stream<E> stream(Iterable<E> eventHandlers) {
-        return StreamSupport.stream(eventHandlers.spliterator(), false);
+    @SuppressWarnings("unchecked")
+    private static <S> Map<Class<?>, EventHandler<S, Object>> buildDictionary(
+        Iterable<EventHandler<S, ?>> eventHandlers
+    ) {
+        return stream(eventHandlers)
+            .map(h -> (EventHandler<S, Object>) h)
+            .collect(toMap(h -> h.getEventType(), h -> h));
     }
 
     public final Snapshot<S> rehydrateState(String streamId) {
@@ -53,37 +58,22 @@ public class Rehydrator<S> {
     }
 
     private Snapshot<S> handleEvent(Snapshot<S> snapshot, Object event) {
-        for (EventHandler<S, ?> handler : eventHandlers) {
-            Class<?> eventType = getEventType(handler);
-            if (eventType.isInstance(event)) {
-                S state = invokeHandler(handler, snapshot.getState(), event);
-                return next(snapshot, state);
-            }
+        EventHandler<S, Object> handler = getHandler(event);
+        S nextState = handler.handleEvent(snapshot.getState(), event);
+        return snapshot.next(nextState);
+    }
+
+    private EventHandler<S, Object> getHandler(Object event) {
+        EventHandler<S, Object> handler = findHandler(event);
+        if (handler == null) {
+            throw new RuntimeException(
+                "No event handler registered for event "
+                + event.getClass().getName());
         }
-
-        throw new RuntimeException(
-            "No event handler registered for event "
-            + event.getClass().getName());
+        return handler;
     }
 
-    @SuppressWarnings("unchecked")
-    private S invokeHandler(EventHandler<S, ?> handler, S state, Object event) {
-        return ((EventHandler<S, Object>) handler).handleEvent(state, event);
-    }
-
-    private Class<?> getEventType(EventHandler<S, ?> handler) {
-        ParameterizedType handlerType = getHandlerType(handler);
-        return (Class<?>) handlerType.getActualTypeArguments()[1];
-    }
-
-    private ParameterizedType getHandlerType(EventHandler<S, ?> handler) {
-        return (ParameterizedType) handler.getClass().getGenericSuperclass();
-    }
-
-    private Snapshot<S> next(Snapshot<S> snapshot, S state) {
-        return new Snapshot<>(
-            snapshot.getStreamId(),
-            snapshot.getVersion() + 1,
-            state);
+    private EventHandler<S, Object> findHandler(Object event) {
+        return eventHandlers.getOrDefault(event.getClass(), null);
     }
 }

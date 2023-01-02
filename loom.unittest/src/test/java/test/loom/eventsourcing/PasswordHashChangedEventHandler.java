@@ -5,10 +5,10 @@ import test.loom.PasswordHashChanged;
 import test.loom.User;
 
 public class PasswordHashChangedEventHandler
-    extends EventHandler<User, PasswordHashChanged> {
+    implements EventHandler<User, PasswordHashChanged> {
 
     @Override
     public User handleEvent(User state, PasswordHashChanged event) {
-        return state.toBuilder().passwordHash(event.getPasswordHash()).build();
+        return state.handleEvent(event);
     }
 }

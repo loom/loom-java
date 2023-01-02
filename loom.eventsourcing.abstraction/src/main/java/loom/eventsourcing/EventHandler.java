@@ -1,6 +1,21 @@
 package loom.eventsourcing;
 
-public abstract class EventHandler<S, E> {
+import java.lang.reflect.ParameterizedType;
+import java.util.Arrays;
 
-    public abstract S handleEvent(S state, E event);
+@FunctionalInterface
+public interface EventHandler<S, E> {
+
+    S handleEvent(S state, E event);
+
+    default Class<?> getEventType() {
+        return Arrays
+            .stream(getClass().getGenericInterfaces())
+            .map(i -> (ParameterizedType) i)
+            .filter(p -> p.getRawType().equals(EventHandler.class))
+            .map(p -> p.getActualTypeArguments()[1])
+            .map(a -> (Class<?>) a)
+            .findFirst()
+            .get();
+    }
 }

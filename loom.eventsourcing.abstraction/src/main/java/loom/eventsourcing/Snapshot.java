@@ -5,8 +5,12 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public final class Snapshot<T> {
+public final class Snapshot<S> {
     private final String streamId;
     private final long version;
-    private final T state;
+    private final S state;
+
+    Snapshot<S> next(S newState) {
+        return new Snapshot<>(streamId, version + 1, newState);
+    }
 }
