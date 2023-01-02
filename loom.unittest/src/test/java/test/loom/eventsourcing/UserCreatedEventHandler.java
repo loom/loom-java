@@ -6,10 +6,6 @@ import test.loom.UserCreated;
 
 public class UserCreatedEventHandler extends EventHandler<User, UserCreated> {
 
-    protected UserCreatedEventHandler() {
-        super(User.class, UserCreated.class);
-    }
-
     @Override
     public User handleEvent(User user, UserCreated event) {
         return user
