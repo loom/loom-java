@@ -44,7 +44,7 @@ public class Rehydrator<S> {
     public final Snapshot<S> rehydrateState(String streamId) {
         return foldl(
             this::handleEvent,
-            new Snapshot<>(streamId, 0, seedFactory.get()),
+            Snapshot.seed(streamId, seedFactory.get()),
             stream(eventReader.queryEvents(stateType, streamId, 1)));
     }
 
