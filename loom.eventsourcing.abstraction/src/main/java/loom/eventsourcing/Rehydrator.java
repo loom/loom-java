@@ -38,7 +38,26 @@ public class Rehydrator<S> {
     ) {
         return stream(eventHandlers)
             .map(h -> (EventHandler<S, Object>) h)
+            .map(Rehydrator::failIfHandlerIsGeneric)
             .collect(toMap(h -> h.getEventType(), h -> h));
+    }
+
+    private static <S> EventHandler<S, Object> failIfHandlerIsGeneric(
+        EventHandler<S, Object> handler
+    ) {
+        if (isGeneric(handler.getClass())) {
+            String message = "Non-generic class expected for event handler."
+                + " Type argument cannot be resolved."
+                + " Make sure to specify the type argument"
+                + " when declaring the event handler class.";
+            throw new RuntimeException(message);
+        }
+
+        return handler;
+    }
+
+    private static boolean isGeneric(Class<?> type) {
+        return type.getTypeParameters().length > 0;
     }
 
     public final Snapshot<S> rehydrateState(String streamId) {
