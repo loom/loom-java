@@ -9,7 +9,6 @@ public class UserRehydrator extends Rehydrator<User> {
 
     public UserRehydrator(EventReader eventReader) {
         super(
-            User.class,
             eventReader,
             User::seedFactory,
             Arrays.asList(

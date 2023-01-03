@@ -82,7 +82,6 @@ class Rehydrator_specs {
 
         public CorruptRehydrator(EventReader eventReader) {
             super(
-                User.class,
                 eventReader,
                 User::seedFactory,
                 Arrays.asList(new GenericEventHandler<User, UserCreated>()));

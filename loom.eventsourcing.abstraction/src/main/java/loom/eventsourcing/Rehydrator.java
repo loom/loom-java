@@ -2,6 +2,7 @@ package loom.eventsourcing;
 
 import static java.util.stream.Collectors.toMap;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -9,23 +10,28 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public class Rehydrator<S> {
+public abstract class Rehydrator<S> {
 
     private final Class<S> stateType;
     private final EventReader eventReader;
     private final Supplier<S> seedFactory;
     private final Map<Class<?>, EventHandler<S, Object>> eventHandlers;
 
-    public Rehydrator(
-        Class<S> stateType,
+    protected Rehydrator(
         EventReader eventReader,
         Supplier<S> seedFactory,
         Iterable<EventHandler<S, ?>> eventHandlers
     ) {
-        this.stateType = stateType;
+        this.stateType = getStateType(getClass());
         this.eventReader = eventReader;
         this.seedFactory = seedFactory;
         this.eventHandlers = buildDictionary(eventHandlers);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <S> Class<S> getStateType(Class<?> type) {
+        ParameterizedType generic = (ParameterizedType) type.getGenericSuperclass();
+        return (Class<S>) generic.getActualTypeArguments()[0];
     }
 
     private static <E> Stream<E> stream(Iterable<E> source) {
