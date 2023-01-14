@@ -15,10 +15,7 @@ public class User {
     }
 
     public User handleEvent(UserCreated event) {
-        return toBuilder()
-            .username(event.getUsername())
-            .passwordHash(event.getPasswordHash())
-            .build();
+        return toBuilder().username(event.getUsername()).build();
     }
 
     public User handleEvent(PasswordHashChanged event) {

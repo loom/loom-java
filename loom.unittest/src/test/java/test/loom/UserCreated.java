@@ -7,5 +7,4 @@ import lombok.Getter;
 @Getter
 public class UserCreated {
     private final String username;
-    private final String passwordHash;
 }

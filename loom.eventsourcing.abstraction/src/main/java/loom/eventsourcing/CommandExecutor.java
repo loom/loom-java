@@ -17,5 +17,5 @@ public interface CommandExecutor<S, C> {
             .map(a -> (Class<?>) a)
             .findFirst()
             .get();
-        }
+    }
 }

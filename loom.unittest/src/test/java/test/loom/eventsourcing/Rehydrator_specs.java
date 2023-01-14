@@ -1,10 +1,11 @@
 package test.loom.eventsourcing;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import autoparams.AutoSource;
-import java.util.Arrays;
+import java.util.List;
 import loom.eventsourcing.EventHandler;
 import loom.eventsourcing.EventReader;
 import loom.eventsourcing.Rehydrator;
@@ -20,15 +21,15 @@ class Rehydrator_specs {
     @ParameterizedTest
     @AutoSource
     void sut_correctly_returns_snapshot(
-        InMemoryEventReader eventReader,
+        InMemoryEventStore eventStore,
         String streamId,
         UserCreated userCreated,
         PasswordHashChanged passwordHashChanged
     ) {
         // Arrange
-        eventReader.addEvent(User.class, streamId, userCreated);
-        eventReader.addEvent(User.class, streamId, passwordHashChanged);
-        UserRehydrator sut = new UserRehydrator(eventReader);
+        List<Object> events = asList(userCreated, passwordHashChanged);
+        eventStore.collectEvents(User.class, streamId, events);
+        UserHeadspring sut = new UserHeadspring(eventStore);
 
         // Act
         Snapshot<User> snapshot = sut.rehydrateState(streamId);
@@ -45,17 +46,19 @@ class Rehydrator_specs {
     @ParameterizedTest
     @AutoSource
     void sut_throws_correct_exception_for_unknown_event(
-        InMemoryEventReader eventReader,
+        InMemoryEventStore eventStore,
         String streamId,
         UserCreated userCreated,
         UnknownEvent unknownEvent,
         PasswordHashChanged passwordHashChanged
     ) {
         // Arrange
-        eventReader.addEvent(User.class, streamId, userCreated);
-        eventReader.addEvent(User.class, streamId, unknownEvent);
-        eventReader.addEvent(User.class, streamId, passwordHashChanged);
-        UserRehydrator sut = new UserRehydrator(eventReader);
+        List<Object> events = asList(
+            userCreated,
+            unknownEvent,
+            passwordHashChanged);
+        eventStore.collectEvents(User.class, streamId, events);
+        UserHeadspring sut = new UserHeadspring(eventStore);
 
         // Act/Assert
         assertThatThrownBy(() -> sut.rehydrateState(streamId))
@@ -67,9 +70,9 @@ class Rehydrator_specs {
     @ParameterizedTest
     @AutoSource
     void sut_denies_handler_of_generic_type(
-        InMemoryEventReader eventReader
+        InMemoryEventStore eventStore
     ) {
-        assertThatThrownBy(() -> new CorruptRehydrator(eventReader))
+        assertThatThrownBy(() -> new CorruptRehydrator(eventStore))
             .isInstanceOf(RuntimeException.class)
             .hasMessage(
                 "Non-generic class expected for event handler."
@@ -84,7 +87,7 @@ class Rehydrator_specs {
             super(
                 eventReader,
                 User::seedFactory,
-                Arrays.asList(new GenericEventHandler<User, UserCreated>()));
+                asList(new GenericEventHandler<User, UserCreated>()));
         }
     }
 

@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import loom.eventsourcing.EventReader;
+import loom.eventsourcing.EventStore;
 
-public class InMemoryEventReader implements EventReader {
+public class InMemoryEventStore implements EventStore {
 
     private final Map<Type, Map<String, List<Object>>> eventStore;
 
-    public InMemoryEventReader() {
+    public InMemoryEventStore() {
         eventStore = new ConcurrentHashMap<>();
     }
 
@@ -38,7 +38,34 @@ public class InMemoryEventReader implements EventReader {
         return events.subList(fromIndexInclusive, toIndexExclusive);
     }
 
-    public void addEvent(Type stateType, String streamId, Object event) {
+    @Override
+    public void collectEvents(
+        Type stateType,
+        String processId,
+        String initiator,
+        String predecessorId,
+        String streamId,
+        long startVersion,
+        Iterable<Object> events
+    ) {
+        collectEvents(stateType, streamId, startVersion, events);
+    }
+
+    public void collectEvents(
+        Type stateType,
+        String streamId,
+        Iterable<Object> events
+    ) {
+        int startVersion = 1;
+        collectEvents(stateType, streamId, startVersion, events);
+    }
+
+    public void collectEvents(
+        Type stateType,
+        String streamId,
+        long startVersion,
+        Iterable<Object> events
+    ) {
         Map<String, List<Object>> streams = eventStore.computeIfAbsent(
             stateType,
             k -> new ConcurrentHashMap<>());
@@ -47,6 +74,15 @@ public class InMemoryEventReader implements EventReader {
             streamId,
             k -> new ArrayList<>());
 
-        stream.add(event);
+        if (stream.size() + 1 != startVersion) {
+            throw new IllegalStateException(
+                "Invalid start version: expected "
+                + (stream.size() + 1)
+                + ", got " + startVersion);
+        }
+
+        for (Object event : events) {
+            stream.add(event);
+        }
     }
 }

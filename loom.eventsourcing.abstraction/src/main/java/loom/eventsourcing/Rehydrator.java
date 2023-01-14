@@ -25,7 +25,15 @@ public abstract class Rehydrator<S> {
         this.stateType = getStateType(getClass());
         this.eventReader = eventReader;
         this.seedFactory = seedFactory;
-        this.eventHandlers = buildDictionary(eventHandlers);
+        this.eventHandlers = toDictionary(eventHandlers);
+    }
+
+    protected Iterable<Class<?>> getEventTypes() {
+        return eventHandlers.keySet();
+    }
+
+    protected Class<S> getStateType() {
+        return stateType;
     }
 
     @SuppressWarnings("unchecked")
@@ -39,7 +47,7 @@ public abstract class Rehydrator<S> {
     }
 
     @SuppressWarnings("unchecked")
-    private static <S> Map<Class<?>, EventHandler<S, Object>> buildDictionary(
+    private static <S> Map<Class<?>, EventHandler<S, Object>> toDictionary(
         Iterable<EventHandler<S, ?>> eventHandlers
     ) {
         return stream(eventHandlers)
