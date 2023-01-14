@@ -8,4 +8,8 @@ public interface EventReader {
         Type stateType,
         String streamId,
         long fromVersion);
+
+    default Iterable<Object> queryEvents(Type stateType, String streamId) {
+        return queryEvents(stateType, streamId, 1);
+    }
 }
