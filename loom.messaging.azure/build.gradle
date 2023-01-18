@@ -1,0 +1,17 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    api(project(':loom.messaging.abstraction'))
+    api 'com.azure:azure-messaging-eventhubs:5.15.0'
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+test {
+    dependsOn('editorconfigCheck', 'checkstyleMain')
+}
