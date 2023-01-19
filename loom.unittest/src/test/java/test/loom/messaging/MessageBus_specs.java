@@ -2,15 +2,13 @@ package test.loom.messaging;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
-
 import autoparams.AutoSource;
 import autoparams.customization.Customization;
 import autoparams.mockito.MockitoCustomizer;
+import java.util.List;
 import loom.messaging.Message;
-import test.loom.Tuple;
-
 import org.junit.jupiter.params.ParameterizedTest;
+import test.loom.Tuple;
 
 class MessageBus_specs {
 
