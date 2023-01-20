@@ -22,12 +22,9 @@ dependencies {
     testImplementation(project(':loom.eventsourcing.type'))
 }
 
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
-
 test {
     dependsOn('editorconfigCheck', 'checkstyleTest')
     useJUnitPlatform()
 }
+
+publishMavenPublicationToOSSRHRepository.enabled = false

@@ -1,85 +1,8 @@
 plugins {
     id 'java-library'
-    id 'maven-publish'
-    id 'signing'
 }
 
 dependencies {
     api 'io.github.loom:loom.eventsourcing.contract:[0.0.1, 0.1.0)'
     api 'io.github.loom:loom.type:[0.0.1, 0.1.0)'
-}
-
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
-
-test {
-    dependsOn('editorconfigCheck', 'checkstyleMain')
-}
-
-group = 'io.github.loom'
-version = artifactVersion
-
-jar {
-    manifest {
-        attributes(
-                'Specification-Title': artifactName,
-                'Specification-Version': artifactVersion,
-                'Specification-Vendor': 'io.github.loom',
-                'Implementation-Title': artifactName,
-                'Implementation-Version': artifactVersion,
-                'Implementation-Vendor': 'io.github.loom'
-        )
-    }
-}
-
-publishing {
-    repositories {
-        maven {
-            name "OSSRH"
-            url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-            credentials {
-                username System.getenv("MAVEN_USERNAME")
-                password System.getenv("MAVEN_PASSWORD")
-            }
-        }
-    }
-
-    publications {
-        maven(MavenPublication) {
-            artifactId artifactId
-            from components.java
-            pom {
-                name = artifactName
-                description = artifactDescription
-                url = "https://github.com/loom/loom-java"
-                licenses {
-                    license {
-                        name = "MIT License"
-                        url = "https://github.com/loom/loom-java/blob/main/LICENSE"
-                    }
-                }
-                developers {
-                    developer {
-                        id = "gyuwon"
-                        name = "Gyuwon Yi"
-                        email = "gyuwon@live.com"
-                    }
-                }
-                scm {
-                    connection = "https://github.com/loom/loom-java.git"
-                    developerConnection = "https://github.com/loom/loom-java.git"
-                    url = "https://github.com/loom/loom-java"
-                }
-            }
-        }
-    }
-}
-
-signing {
-    def signingKey = System.getenv("SIGNING_KEY")
-    def signingPassword = System.getenv("SIGNING_PASSWORD")
-    useInMemoryPgpKeys(signingKey, signingPassword)
-    sign publishing.publications.maven
 }
