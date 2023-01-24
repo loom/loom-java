@@ -14,4 +14,8 @@ public interface TypeResolver {
             return new RuntimeException(message);
         });
     }
+
+    static TypeResolver forClassName() {
+        return ClassNameTypeResolver.INSTANCE;
+    }
 }
