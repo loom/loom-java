@@ -5,12 +5,12 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import loom.type.TypeStrategy;
 
-public class StreamCommandTypeStrategy implements TypeStrategy {
+public class StreamEventTypeStrategy implements TypeStrategy {
 
     private final Supplier<TypeStrategy> payloadStrategyFactory;
     private final String prefix;
 
-    public StreamCommandTypeStrategy(
+    public StreamEventTypeStrategy(
         Supplier<TypeStrategy> payloadStrategyFactory,
         String prefix
     ) {
@@ -18,10 +18,10 @@ public class StreamCommandTypeStrategy implements TypeStrategy {
         this.prefix = prefix;
     }
 
-    public StreamCommandTypeStrategy(
+    public StreamEventTypeStrategy(
         Supplier<TypeStrategy> payloadStrategyFactory
     ) {
-        this(payloadStrategyFactory, "streamcommand");
+        this(payloadStrategyFactory, "streamevent");
     }
 
     @Override
@@ -31,14 +31,14 @@ public class StreamCommandTypeStrategy implements TypeStrategy {
 
     @Override
     public Optional<String> tryFormatTypeOf(Object value) {
-        return value instanceof StreamCommand
+        return value instanceof StreamEvent
             ? Optional.of(formatStreamCommandTypeOf(value))
             : Optional.empty();
     }
 
     private String formatStreamCommandTypeOf(Object value) {
-        StreamCommand<?> command = (StreamCommand<?>) value;
-        Object payload = command.getPayload();
+        StreamEvent<?> event = (StreamEvent<?>) value;
+        Object payload = event.getPayload();
         TypeStrategy payloadStrategy = payloadStrategyFactory.get();
         return prefix + ":" + payloadStrategy.formatTypeOf(payload);
     }
@@ -53,7 +53,7 @@ public class StreamCommandTypeStrategy implements TypeStrategy {
                 String formattedPayloadType = parts[1];
                 Optional<Type> payloadType =
                     payloadStrategy.tryResolveType(formattedPayloadType);
-                return payloadType.map(StreamCommandType::new);
+                return payloadType.map(StreamEventType::new);
             } else {
                 return Optional.empty();
             }
@@ -62,10 +62,10 @@ public class StreamCommandTypeStrategy implements TypeStrategy {
         }
     }
 
-    private static final class StreamCommandType extends GenericType {
+    private static final class StreamEventType extends GenericType {
 
-        public StreamCommandType(Type payloadType) {
-            super(StreamCommand.class, payloadType);
+        public StreamEventType(Type payloadType) {
+            super(StreamEvent.class, payloadType);
         }
     }
 }
