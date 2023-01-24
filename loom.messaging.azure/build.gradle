@@ -6,3 +6,5 @@ dependencies {
     api(project(':loom.messaging.abstraction'))
     api 'com.azure:azure-messaging-eventhubs:5.15.0'
 }
+
+publishMavenPublicationToOSSRHRepository.enabled = false
