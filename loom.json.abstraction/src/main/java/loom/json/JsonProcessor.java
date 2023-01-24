@@ -14,7 +14,7 @@ public final class JsonProcessor {
     }
 
     public JsonData convertToJson(Object value) {
-        String formattedType = typeStrategy.formatType(value);
+        String formattedType = typeStrategy.formatTypeOf(value);
         String json = jsonStrategy.serialize(value);
         return new JsonData(formattedType, json);
     }
