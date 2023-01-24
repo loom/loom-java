@@ -6,6 +6,7 @@ import java.util.Optional;
 import loom.eventsourcing.StreamCommand;
 import loom.eventsourcing.StreamEvent;
 
+@Deprecated
 public final class EventSourcingTypeStrategy implements TypeStrategy {
 
     private final TypeStrategy payloadStrategy;
@@ -15,16 +16,21 @@ public final class EventSourcingTypeStrategy implements TypeStrategy {
     }
 
     @Override
+    public Optional<String> tryFormatType(Type type) {
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<String> tryFormatType(Object value) {
         if (value instanceof StreamCommand) {
             StreamCommand<?> command = (StreamCommand<?>) value;
             Object payload = command.getPayload();
-            String payloadType = payloadStrategy.formatType(payload);
+            String payloadType = payloadStrategy.formatTypeOf(payload);
             return Optional.of("stream-command:" + payloadType);
         } else if (value instanceof StreamEvent) {
             StreamEvent<?> event = (StreamEvent<?>) value;
             Object payload = event.getPayload();
-            String payloadType = payloadStrategy.formatType(payload);
+            String payloadType = payloadStrategy.formatTypeOf(payload);
             return Optional.of("stream-event:" + payloadType);
         } else {
             return Optional.empty();
