@@ -3,26 +3,26 @@ package loom.type;
 import java.lang.reflect.Type;
 import java.util.Optional;
 
-public class DelegatingTypeStrategy implements TypeStrategy {
+final class DelegatingTypeStrategy implements TypeStrategy {
 
-    private final TypeFormatter typeFormatter;
-    private final TypeResolver typeResolver;
+    private final TypeFormatter formatter;
+    private final TypeResolver resolver;
 
     public DelegatingTypeStrategy(
-        TypeFormatter typeFormatter,
-        TypeResolver typeResolver
+        TypeFormatter formatter,
+        TypeResolver resolver
     ) {
-        this.typeFormatter = typeFormatter;
-        this.typeResolver = typeResolver;
+        this.formatter = formatter;
+        this.resolver = resolver;
     }
 
     @Override
-    public Optional<String> tryFormatType(Object value) {
-        return typeFormatter.tryFormatType(value);
+    public Optional<String> tryFormatType(Type type) {
+        return formatter.tryFormatType(type);
     }
 
     @Override
     public Optional<Type> tryResolveType(String formattedType) {
-        return typeResolver.tryResolveType(formattedType);
+        return resolver.tryResolveType(formattedType);
     }
 }

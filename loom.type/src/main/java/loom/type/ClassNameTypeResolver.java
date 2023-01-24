@@ -3,7 +3,7 @@ package loom.type;
 import java.lang.reflect.Type;
 import java.util.Optional;
 
-class ClassNameTypeResolver implements TypeResolver {
+final class ClassNameTypeResolver implements TypeResolver {
 
     public static final TypeResolver INSTANCE = new ClassNameTypeResolver();
 
