@@ -24,6 +24,7 @@ public class EventConverter {
     public EventData convertToEvent(Message message) {
         String body = _jsonStrategy.serialize(message.getData());
         EventData eventData = new EventData(body);
+        eventData.setMessageId(message.getId());
         setProperties(message, eventData);
         return eventData;
     }
@@ -38,9 +39,9 @@ public class EventConverter {
 
     private Message getMessage(EventData eventData, Type t) {
         return new Message(
-            "",
+            eventData.getMessageId(),
             (String) eventData.getProperties().get("ProcessId"),
-            "",
+            (String) eventData.getProperties().get("Initiator"),
             (String) eventData.getProperties().get("PredecessorId"),
             _jsonStrategy.deserialize(t, eventData.getBodyAsString()));
     }
@@ -49,6 +50,7 @@ public class EventConverter {
         String type = _typeStrategy.formatTypeOf(message.getData());
         Map<String, Object> properties = eventData.getProperties();
         properties.put("Type", type);
+        properties.put("Initiator", message.getInitiator());
         properties.put("ProcessId", message.getProcessId());
         properties.put("PredecessorId", message.getPredecessorId());
     }

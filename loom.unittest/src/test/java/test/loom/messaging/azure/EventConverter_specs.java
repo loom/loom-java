@@ -41,6 +41,26 @@ public class EventConverter_specs {
     @ParameterizedTest
     @AutoSource
     @Customization(MockitoCustomizer.class)
+    public void convertToEvent_correctly_serializes_message_id(
+        JacksonJsonStrategy jsonStrategy,
+        Message message
+    ) {
+        // Arrange
+        TypeFormatter formatter = TypeFormatter.forTypeName();
+        TypeResolver resolver = TypeResolver.forClassName();
+        TypeStrategy typeStrategy = TypeStrategy.create(formatter, resolver);
+        EventConverter sut = new EventConverter(jsonStrategy, typeStrategy);
+
+        // Act
+        EventData actual = sut.convertToEvent(message);
+
+        // Assert
+        assertThat(actual.getMessageId()).isEqualTo(message.getId());
+    }
+
+    @ParameterizedTest
+    @AutoSource
+    @Customization(MockitoCustomizer.class)
     public void convertToEvent_correctly_sets_Type_property(
         JacksonJsonStrategy jsonStrategy,
         Message message
@@ -107,6 +127,27 @@ public class EventConverter_specs {
     @ParameterizedTest
     @AutoSource
     @Customization(MockitoCustomizer.class)
+    public void convertToEvent_correctly_sets_Initiator_property(
+        JacksonJsonStrategy jsonStrategy,
+        Message message
+    ) {
+        // Arrange
+        TypeFormatter formatter = TypeFormatter.forTypeName();
+        TypeResolver resolver = TypeResolver.forClassName();
+        TypeStrategy typeStrategy = TypeStrategy.create(formatter, resolver);
+        EventConverter sut = new EventConverter(jsonStrategy, typeStrategy);
+
+        // Act
+        EventData actual = sut.convertToEvent(message);
+
+        // Assert
+        assertThat(actual.getProperties().get("Initiator")).isNotNull();
+        assertThat(actual.getProperties().get("Initiator")).isEqualTo(message.getInitiator());
+    }
+
+    @ParameterizedTest
+    @AutoSource
+    @Customization(MockitoCustomizer.class)
     public void tryRestoreMessage_returns_empty_if_type_cannot_be_resolved(
         JacksonJsonStrategy jsonStrategy,
         Message message,
@@ -159,6 +200,29 @@ public class EventConverter_specs {
     @ParameterizedTest
     @AutoSource
     @Customization(MockitoCustomizer.class)
+    public void tryRestoreMessage_correctly_restores_message_id(
+        JacksonJsonStrategy jsonStrategy,
+        Message message
+    ) {
+        // Arrange
+        TypeFormatter formatter = TypeFormatter.forTypeName();
+        TypeResolver resolver = TypeResolver.forClassName();
+        TypeStrategy typeStrategy = TypeStrategy.create(formatter, resolver);
+        EventConverter sut = new EventConverter(jsonStrategy, typeStrategy);
+        EventData eventData = sut.convertToEvent(message);
+
+        // Act
+        Optional<Message> actual = sut.tryRestoreMessage(eventData);
+
+        // Assert
+        assertThat(actual).isNotEmpty();
+        String expected = eventData.getMessageId();
+        assertThat(actual.get().getId()).isEqualTo(expected);
+    }
+
+    @ParameterizedTest
+    @AutoSource
+    @Customization(MockitoCustomizer.class)
     public void tryRestoreMessage_correctly_restores_process_id(
         JacksonJsonStrategy jsonStrategy,
         Message message
@@ -200,6 +264,29 @@ public class EventConverter_specs {
         String expected = (String) eventData.getProperties().get("PredecessorId");
         //noinspection OptionalGetWithoutIsPresent
         assertThat(actual.get().getPredecessorId()).isEqualTo(expected);
+    }
+
+    @ParameterizedTest
+    @AutoSource
+    @Customization(MockitoCustomizer.class)
+    public void tryRestoreMessage_correctly_restores_initiator(
+        JacksonJsonStrategy jsonStrategy,
+        Message message
+    ) {
+        // Arrange
+        TypeFormatter formatter = TypeFormatter.forTypeName();
+        TypeResolver resolver = TypeResolver.forClassName();
+        TypeStrategy typeStrategy = TypeStrategy.create(formatter, resolver);
+        EventConverter sut = new EventConverter(jsonStrategy, typeStrategy);
+        EventData eventData = sut.convertToEvent(message);
+
+        // Act
+        Optional<Message> actual = sut.tryRestoreMessage(eventData);
+
+        // Assert
+        String expected = (String) eventData.getProperties().get("Initiator");
+        //noinspection OptionalGetWithoutIsPresent
+        assertThat(actual.get().getInitiator()).isEqualTo(expected);
     }
 
     @ParameterizedTest
