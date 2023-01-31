@@ -5,8 +5,9 @@ import loom.json.JsonStrategy;
 import loom.messaging.Message;
 import loom.type.TypeStrategy;
 
+import java.lang.reflect.Type;
 import java.util.Map;
-import java.util.Properties;
+import java.util.Optional;
 
 public class EventConverter {
     private final JsonStrategy _jsonStrategy;
@@ -25,6 +26,23 @@ public class EventConverter {
         EventData eventData = new EventData(body);
         setProperties(message, eventData);
         return eventData;
+    }
+
+    public Optional<Message> tryRestoreMessage(EventData eventData) {
+        return eventData.getBody() == null
+            ? Optional.empty()
+            : _typeStrategy
+                .tryResolveType((String)eventData.getProperties().get("Type"))
+                .flatMap(t -> Optional.of(getMessage(eventData, t)));
+    }
+
+    private Message getMessage(EventData eventData, Type t) {
+        return new Message(
+            "",
+            (String) eventData.getProperties().get("ProcessId"),
+            "",
+            (String) eventData.getProperties().get("PredecessorId"),
+            _jsonStrategy.deserialize(t, eventData.getBodyAsString()));
     }
 
     private void setProperties(Message message, EventData eventData) {
