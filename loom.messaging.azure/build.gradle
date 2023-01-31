@@ -4,6 +4,8 @@ plugins {
 
 dependencies {
     api(project(':loom.messaging.abstraction'))
+    api(project(':loom.json.abstraction'))
+    api(project(':loom.type'))
     api 'com.azure:azure-messaging-eventhubs:5.15.0'
 }
 
