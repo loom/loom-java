@@ -6,7 +6,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.function.Supplier;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -14,12 +14,12 @@ public abstract class Rehydrator<S> {
 
     private final Class<S> stateType;
     private final EventReader eventReader;
-    private final Supplier<S> seedFactory;
+    private final Function<String, S> seedFactory;
     private final Map<Class<?>, EventHandler<S, Object>> eventHandlers;
 
     protected Rehydrator(
         EventReader eventReader,
-        Supplier<S> seedFactory,
+        Function<String, S> seedFactory,
         Iterable<EventHandler<S, ?>> eventHandlers
     ) {
         this.stateType = getStateType(getClass());
@@ -53,7 +53,7 @@ public abstract class Rehydrator<S> {
         return stream(eventHandlers)
             .map(h -> (EventHandler<S, Object>) h)
             .map(Rehydrator::failIfHandlerIsGeneric)
-            .collect(toMap(h -> h.getEventType(), h -> h));
+            .collect(toMap(EventHandler::getEventType, h -> h));
     }
 
     private static <S> EventHandler<S, Object> failIfHandlerIsGeneric(
@@ -77,7 +77,7 @@ public abstract class Rehydrator<S> {
     public final Snapshot<S> rehydrateState(String streamId) {
         return foldl(
             this::handleEvent,
-            Snapshot.seed(streamId, seedFactory.get()),
+            Snapshot.seed(streamId, seedFactory.apply(streamId)),
             stream(eventReader.queryEvents(stateType, streamId, 1)));
     }
 

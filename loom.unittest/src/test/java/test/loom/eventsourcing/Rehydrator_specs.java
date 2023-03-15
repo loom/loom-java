@@ -1,6 +1,7 @@
 package test.loom.eventsourcing;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -81,13 +82,24 @@ class Rehydrator_specs {
                 + " when declaring the event handler class.");
     }
 
+    @ParameterizedTest
+    @AutoSource
+    void sut_correctly_applies_stream_id_when_creates_seed(
+        InMemoryEventStore eventStore,
+        String streamId
+    ) {
+        UserHeadspring sut = new UserHeadspring(eventStore);
+        Snapshot<User> snapshot = sut.rehydrateState(streamId);
+        assertThat(snapshot.getState().getId()).isEqualTo(streamId);
+    }
+
     static class CorruptRehydrator extends Rehydrator<User> {
 
         public CorruptRehydrator(EventReader eventReader) {
             super(
                 eventReader,
                 User::seedFactory,
-                asList(new GenericEventHandler<User, UserCreated>()));
+                singletonList(new GenericEventHandler<User, UserCreated>()));
         }
     }
 
