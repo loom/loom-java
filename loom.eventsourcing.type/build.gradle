@@ -6,5 +6,3 @@ dependencies {
     api 'io.github.loom:loom.eventsourcing.contract:[0.5.0, 0.6.0)'
     api 'io.github.loom:loom.type:[0.5.0, 0.6.0)'
 }
-
-version = '0.5.0'

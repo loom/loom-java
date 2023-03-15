@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    api 'io.github.loom:loom.eventsourcing.contract:[0.1.0, 0.2.0)'
-    api 'io.github.loom:loom.messaging.abstraction:[0.1.0, 0.2.0)'
+    api 'io.github.loom:loom.eventsourcing.contract:[0.5.0, 0.6.0)'
+    api 'io.github.loom:loom.messaging.abstraction:[0.5.0, 0.6.0)'
 }

@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    api 'io.github.loom:loom.json.abstraction:[0.1.0, 0.2.0)'
+    api 'io.github.loom:loom.json.abstraction:[0.5.0, 0.6.0)'
     api 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
 }
