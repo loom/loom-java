@@ -5,7 +5,7 @@ import static java.util.stream.Collectors.toMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import loom.messaging.Message;
@@ -20,7 +20,7 @@ public abstract class Headspring<S>
 
     protected Headspring(
         EventStore eventStore,
-        Supplier<S> seedFactory,
+        Function<String, S> seedFactory,
         Iterable<CommandExecutor<S, ?>> commandExecutors,
         Iterable<EventHandler<S, ?>> eventHandlers
     ) {
@@ -40,12 +40,12 @@ public abstract class Headspring<S>
     ) {
         return stream(commandExecutor)
             .map(e -> (CommandExecutor<S, Object>) e)
-            .collect(toMap(e -> e.getCommandType(), h -> h));
+            .collect(toMap(CommandExecutor::getCommandType, h -> h));
     }
 
     @Override
     public boolean canHandle(Message message) {
-        if (StreamCommand.class.isInstance(message.getData()) == false) {
+        if (message.getData() instanceof StreamCommand == false) {
             return false;
         }
 
@@ -66,7 +66,7 @@ public abstract class Headspring<S>
             predecessorId,
             command.getStreamId(),
             snapshot.getVersion() + 1,
-            produceEvents(snapshot.getState(), (StreamCommand<?>) command));
+            produceEvents(snapshot.getState(), command));
     }
 
     private Iterable<Object> produceEvents(S state, StreamCommand<?> command) {
@@ -92,7 +92,7 @@ public abstract class Headspring<S>
     }
 
     private CommandExecutor<S, Object> getExecutor(Object payload) {
-        Class<? extends Object> payloadType = payload.getClass();
+        Class<?> payloadType = payload.getClass();
         if (commandExecutors.containsKey(payloadType) == false) {
             throw new RuntimeException(
                 "Unsupported command payload type '"

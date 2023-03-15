@@ -34,28 +34,27 @@ class TypeFormatter_specs {
 
     @ParameterizedTest
     @AutoSource
-    void tryFormatTypeOf_delegates_with_class_of_value(String some) {
-        TypeFormatter sut = x -> {
-            return Optional.ofNullable(x == User.class ? some : null);
-        };
-        Optional<String> actual = sut.tryFormatTypeOf(User.seedFactory());
+    void tryFormatTypeOf_delegates_with_class_of_value(String some, String id) {
+        TypeFormatter sut = x ->
+            Optional.ofNullable(x == User.class ? some : null);
+        Optional<String> actual = sut.tryFormatTypeOf(User.seedFactory(id));
         assertThat(actual).hasValue(some);
     }
 
     @ParameterizedTest
     @AutoSource
-    void formatTypeOf_correctly_unwrap_some_value(String some) {
-        TypeFormatter sut = x -> {
-            return Optional.ofNullable(x == User.class ? some : null);
-        };
-        String actual = sut.formatTypeOf(User.seedFactory());
+    void formatTypeOf_correctly_unwrap_some_value(String some, String id) {
+        TypeFormatter sut = x ->
+            Optional.ofNullable(x == User.class ? some : null);
+        String actual = sut.formatTypeOf(User.seedFactory(id));
         assertThat(actual).isEqualTo(some);
     }
 
-    @Test
-    void formatTypeOf_throws_RuntimeException_for_none() {
+    @ParameterizedTest
+    @AutoSource
+    void formatTypeOf_throws_RuntimeException_for_none(String id) {
         TypeFormatter sut = x -> Optional.empty();
-        assertThatThrownBy(() -> sut.formatTypeOf(User.seedFactory()))
+        assertThatThrownBy(() -> sut.formatTypeOf(User.seedFactory(id)))
             .isInstanceOf(RuntimeException.class)
             .hasMessage("Unable to format type: test.loom.User");
     }

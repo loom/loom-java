@@ -1,6 +1,7 @@
 package test.loom.eventsourcing;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -87,7 +88,7 @@ class Rehydrator_specs {
             super(
                 eventReader,
                 User::seedFactory,
-                asList(new GenericEventHandler<User, UserCreated>()));
+                singletonList(new GenericEventHandler<User, UserCreated>()));
         }
     }
 
